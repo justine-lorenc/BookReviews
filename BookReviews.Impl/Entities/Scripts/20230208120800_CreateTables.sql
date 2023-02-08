@@ -1,0 +1,47 @@
+﻿USE [BookReviews];
+GO
+
+CREATE TABLE [dbo].[Genre]
+(
+	[Id] SMALLINT NOT NULL IDENTITY,
+	[Name] VARCHAR(50) NOT NULL,
+	[IsFiction] BIT NOT NULL,
+	CONSTRAINT PK_Genre PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [dbo].[Book]
+(
+	[Id] INT NOT NULL IDENTITY,
+	[Title] VARCHAR(200) NOT NULL,
+	[Author] VARCHAR(100) NOT NULL,
+	[Pages] SMALLINT NULL,
+	[Hours] FLOAT(4),
+	[DateAdded] DATETIME NOT NULL,
+	[DateUpdated] DATETIME NOT NULL,
+	[GenreId] SMALLINT NOT NULL,
+	CONSTRAINT PK_Book PRIMARY KEY ([Id])
+);
+
+ALTER TABLE [dbo].[Book] ADD CONSTRAINT FK_Book_Genre FOREIGN KEY ([GenreId]) REFERENCES [dbo].[Genre] ([Id]);
+
+CREATE TABLE [dbo].[BookFormat]
+(
+	[Id] SMALLINT NOT NULL,
+	[Name] VARCHAR(50) NOT NULL,
+	CONSTRAINT PK_BookFormat PRIMARY KEY ([Id])
+);
+
+CREATE TABLE [dbo].[Review]
+(
+	[Id] INT NOT NULL IDENTITY,
+	[Rating] FLOAT(2) NOT NULL,
+	[BookFormat] SMALLINT NOT NULL,
+	[DateAdded] DATETIME NOT NULL,
+	[DateUpdated] DATETIME NOT NULL,
+	[BookId] INT NOT NULL,
+	CONSTRAINT PK_Review PRIMARY KEY ([Id])
+);
+
+ALTER TABLE [dbo].[Review] ADD CONSTRAINT FK_Review_Book FOREIGN KEY ([BookId]) REFERENCES [dbo].[Book] ([Id]);
+
+GO

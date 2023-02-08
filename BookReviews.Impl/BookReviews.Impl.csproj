@@ -41,12 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Book.cs" />
+    <Compile Include="Entities\Enums\BookFormat.cs" />
+    <Compile Include="Entities\Genre.cs" />
+    <Compile Include="Entities\Review.cs" />
+    <Compile Include="Models\Book.cs" />
+    <Compile Include="Models\Enums\BookFormat.cs" />
+    <Compile Include="Models\Genre.cs" />
+    <Compile Include="Models\Review.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\" />
+    <Content Include="Entities\Scripts\20230208120800_CreateTables.sql" />
+    <Content Include="Entities\Scripts\20230208122100_PopulateTypeTables.sql" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Logic\Interfaces\" />
-    <Folder Include="Models\" />
     <Folder Include="Repositories\Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
