@@ -1,0 +1,17 @@
+﻿$color-primary: #386150;
+$color-secondary: #C5E384;
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding: 15px;
+}
+
+.main-menu {
+    background-color: $color-primary;
+}
+
+#nav-logo {
+    margin: 10px;
+    max-width: 200px;
+    max-height: 30px;
+}

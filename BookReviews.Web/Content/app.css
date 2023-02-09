@@ -1,0 +1,16 @@
+/* Set padding to keep content from hitting the edges */
+.body-content {
+  padding: 15px;
+}
+
+.main-menu {
+  background-color: #386150;
+}
+
+#nav-logo {
+  margin: 10px;
+  max-width: 200px;
+  max-height: 30px;
+}
+
+/*# sourceMappingURL=app.css.map */
