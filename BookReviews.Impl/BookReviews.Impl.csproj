@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.10.1.1\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,23 +44,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\MapperProfile.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Entities\Enums\BookFormat.cs" />
     <Compile Include="Entities\Genre.cs" />
     <Compile Include="Entities\Review.cs" />
+    <Compile Include="Logic\BookLogic.cs" />
+    <Compile Include="Logic\Interfaces\IBookLogic.cs" />
+    <Compile Include="Logic\Interfaces\IReviewLogic.cs" />
+    <Compile Include="Logic\ReviewLogic.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\Enums\BookFormat.cs" />
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\BookRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IBookRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IReviewRepository.cs" />
+    <Compile Include="Repositories\ReviewRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Entities\Scripts\20230208120800_CreateTables.sql" />
     <Content Include="Entities\Scripts\20230208122100_PopulateTypeTables.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Logic\Interfaces\" />
-    <Folder Include="Repositories\Interfaces\" />
+    <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
