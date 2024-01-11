@@ -64,8 +64,8 @@
     <Compile Include="Repositories\ReviewRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Entities\Scripts\20230208120800_CreateTables.sql" />
-    <Content Include="Entities\Scripts\20230208122100_PopulateTypeTables.sql" />
+    <Content Include="Entities\Scripts\20240111151400_CreateTables.sql" />
+    <Content Include="Entities\Scripts\20240111151500_PopulateTypeTables.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

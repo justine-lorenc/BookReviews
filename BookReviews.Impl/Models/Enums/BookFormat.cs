@@ -8,7 +8,7 @@ namespace BookReviews.Impl.Models.Enums
 {
     public enum BookFormat : short
     {
-        Paper = 0,
+        Physical = 0,
         Ebook = 1,
         Audiobook = 2
     }

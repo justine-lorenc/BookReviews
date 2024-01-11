@@ -11,8 +11,7 @@ namespace BookReviews.Impl.Entities
         public int Id { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
-        public short? Pages { get; set; }
-        public float? Hours { get; set; }
+        public short Pages { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime DateUpdated { get; set; }
         public short GenreId { get; set; }
