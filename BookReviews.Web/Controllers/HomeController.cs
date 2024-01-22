@@ -8,6 +8,9 @@ namespace BookReviews.Web.Controllers
 {
     public class HomeController : Controller
     {
+        [HttpGet]
+        [Route("")]
+        [Route("home")]
         public ActionResult Index()
         {
             return View();

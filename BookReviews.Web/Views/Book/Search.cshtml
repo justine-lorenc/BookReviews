@@ -1,0 +1,91 @@
+﻿@model SearchVM
+@using BookReviews.Web.ViewModels;
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<div class="container">
+    @using (Html.BeginForm("Search", "Book", FormMethod.Get))
+    {
+        <div class="row py-2">
+            <div class="col">
+                @Html.LabelFor(m => m.SearchCategory, new { @class = "form-label" })
+                @Html.EnumDropDownListFor(m => m.SearchCategory, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.SearchCategory)
+            </div>
+            <div class="col">
+                @Html.LabelFor(m => m.SearchTerm, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.SearchTerm, new { maxLength = 50, @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.SearchTerm)
+            </div>
+        </div>
+        <div class="row py-2">
+            <div class="col">
+                <button type="submit" class="btn btn-primary" value="Submit">Search</button>
+            </div>
+        </div>
+    }
+
+    @if (Model != null && !String.IsNullOrWhiteSpace(Model.SearchTerm))
+    {
+        if (Model.Results?.Count > 0)
+        {
+            <table>
+                @foreach (var result in Model.Results)
+                {
+                    <tr>
+                        <td rowspan="4"><img src="@result.CoverUrl" /></td>
+                    </tr>
+                    <tr>
+                        <td>@result.Title</td>
+                    </tr>
+                    <tr>
+                        @{ 
+                            string authors = "Unknown";
+
+                            if (result.Authors != null && result.Authors.Count > 0)
+                            {
+                                if (result.Authors.Count > 1)
+                                {
+                                    authors = String.Join(", ", result.Authors);
+                                    if (authors.Length > 20)
+                                    {
+                                        authors = authors.Substring(0, 20) + "...";
+                                    }
+                                }
+                                else
+                                {
+                                    authors = result.Authors.First();
+                                }
+                            }
+                        }
+                        <td>
+                            By @authors
+                        </td>
+                    </tr>
+                    <tr>
+                        @{
+                            string description = String.Empty;
+                            if (!String.IsNullOrWhiteSpace(result.Description))
+                            {
+                                description = result.Description.Length > 200
+                                    ? $"{result.Description.Substring(0, 200)}..." : result.Description;
+                            }
+                        }
+                        <td>
+                            @description
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <span>No results found.</span>
+        }
+    }
+</div>

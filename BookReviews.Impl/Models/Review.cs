@@ -11,9 +11,12 @@ namespace BookReviews.Impl.Models
     {
         public int Id { get; set; }
         public float Rating { get; set; }
-        public BookFormat BookFormat { get; set; }
+        public string Notes { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime DateUpdated { get; set; }
-        public int BookId { get; set; }
+        public Book Book { get; set; }
+        public User Author { get; set; }
+        public Genre Genre { get; set; }
+        public BookFormat BookFormat { get; set; }
     }
 }

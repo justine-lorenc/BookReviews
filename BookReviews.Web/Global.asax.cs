@@ -1,13 +1,17 @@
 ﻿using Autofac;
-using AutoMapper;
-using BookReviews.Impl.Configuration;
+using Autofac.Integration.Mvc;
+using AutoMapper.Contrib.Autofac.DependencyInjection;
+using BookReviews.Impl;
 using BookReviews.Impl.Logic;
 using BookReviews.Impl.Logic.Interfaces;
 using BookReviews.Impl.Repositories;
 using BookReviews.Impl.Repositories.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -21,17 +25,34 @@ namespace BookReviews.Web
 
         protected void Application_Start()
         {
+            RegisterDependencies();
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            RegisterDependencies();
-            RegisterAutoMapper();
         }
 
         protected void RegisterDependencies()
         {
             var builder = new ContainerBuilder();
+
+            builder.RegisterControllers(Assembly.GetExecutingAssembly());
+
+            builder.Register(ctx =>
+            {
+                var services = new ServiceCollection();
+                services.AddHttpClient(Constants.AppSettings.BookSearchClientName, c =>
+                {
+                    c.BaseAddress = new Uri(Constants.AppSettings.GoogleBooksApiUrl);
+                    c.Timeout = TimeSpan.FromMinutes(2);
+                    c.DefaultRequestHeaders.Add("accept", "application/json");
+                })
+                .SetHandlerLifetime(TimeSpan.FromMinutes(4));
+
+                var provider = services.BuildServiceProvider();
+                return provider.GetRequiredService<IHttpClientFactory>();
+
+            }).SingleInstance();
 
             builder.RegisterType<BookLogic>().As<IBookLogic>();
             builder.RegisterType<ReviewLogic>().As<IReviewLogic>();
@@ -39,14 +60,20 @@ namespace BookReviews.Web
             builder.RegisterType<BookRepository>().As<IBookRepository>();
             builder.RegisterType<ReviewRepository>().As<IReviewRepository>();
 
-            Container = builder.Build();
-        }
+            Assembly[] assemblies = new Assembly[] {
+                typeof(BookReviews.Impl.Configuration.MapperProfile).Assembly,
+                typeof(BookReviews.Web.Configuration.MapperProfile).Assembly
+            };
 
-        protected void RegisterAutoMapper()
-        {
-            var config = new MapperConfiguration(cfg => {
-                cfg.AddProfile<MapperProfile>();
-            });
+            builder.RegisterAutoMapper(assemblies: assemblies);
+
+            Container = builder.Build();
+
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(Container));
+
+            // this can be used to verify mapping configuration
+            //var mapperConfiguration = Container.Resolve<MapperConfiguration>();
+            //mapperConfiguration.AssertConfigurationIsValid();
         }
     }
 }
