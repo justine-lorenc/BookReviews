@@ -1,5 +1,6 @@
 ﻿@model SearchVM
 @using BookReviews.Web.ViewModels;
+@using BookReviews.Web.Utilities;
 
 @{
     ViewBag.Title = "Search";
@@ -31,38 +32,26 @@
     {
         if (Model.Results?.Count > 0)
         {
+            <div>@Model.Results.Count results</div>
             <table>
                 @foreach (var result in Model.Results)
                 {
                     <tr>
-                        <td rowspan="4"><img src="@result.CoverUrl" /></td>
+                        <td rowspan="5"><img src="@result.CoverUrl" /></td>
                     </tr>
                     <tr>
-                        <td>@result.Title</td>
+                        <td>@Html.ActionLink(result.Title, "Index", "Book", new { id = result.Id }, null)</td>
                     </tr>
                     <tr>
-                        @{ 
-                            string authors = "Unknown";
-
-                            if (result.Authors != null && result.Authors.Count > 0)
-                            {
-                                if (result.Authors.Count > 1)
-                                {
-                                    authors = String.Join(", ", result.Authors);
-                                    if (authors.Length > 20)
-                                    {
-                                        authors = authors.Substring(0, 20) + "...";
-                                    }
-                                }
-                                else
-                                {
-                                    authors = result.Authors.First();
-                                }
-                            }
+                        @{
+                            string authors = ViewExtensions.GetAuthorLinks(result.Authors, 2);
                         }
                         <td>
-                            By @authors
+                            By @Html.Raw(authors)
                         </td>
+                    </tr>
+                    <tr>
+                        <td>Published @result.DatePublished.Year</td>
                     </tr>
                     <tr>
                         @{

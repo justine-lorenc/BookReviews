@@ -25,6 +25,19 @@ namespace BookReviews.Web.Controllers
         }
 
         [HttpGet]
+        [Route("{id:long}")]
+        public async Task<ActionResult> Index(long id)
+        {
+            if (id == default)
+                return View();
+
+            List<Book> results = await _bookLogic.SearchBooks(SearchCategory.Isbn, id.ToString());
+            Book model = results.FirstOrDefault();
+
+            return View(model);
+        }
+
+        [HttpGet]
         [Route("search")]
         public async Task<ActionResult> Search(SearchCategory searchCategory = SearchCategory.Title, string searchTerm = null)
         {
@@ -42,6 +55,11 @@ namespace BookReviews.Web.Controllers
 
             // initialize results list
             List<Book> results = await _bookLogic.SearchBooks(searchCategory, searchTerm);
+
+            // group books with the same title and author, then display the earliest published version
+            // from each group
+            results = results.GroupBy(x => new { x.Title, Author = x.Authors.FirstOrDefault() })
+                .Select(x => x.OrderBy(y => y.DatePublished).First()).ToList();
 
             // TODO: pagination may be needed
             model.Results = results;

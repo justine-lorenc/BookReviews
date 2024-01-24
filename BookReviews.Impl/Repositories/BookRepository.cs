@@ -59,6 +59,9 @@ namespace BookReviews.Impl.Repositories
                 case SearchCategory.Author:
                     queryType += "inauthor:";
                     break;
+                case SearchCategory.Isbn:
+                    queryType += "isbn:";
+                    break;
                 default:
                     throw new Exception("Invalid search category");
             }
@@ -70,6 +73,9 @@ namespace BookReviews.Impl.Repositories
 
             // written in English
             queryUrl += "&langRestrict=en";
+
+            // max results to return
+            queryUrl += "&maxResults=40";
 
             // authenticate the request with the API key
             queryUrl += $"&key={Constants.AppSettings.GoogleBooksApiKey}";
@@ -114,9 +120,7 @@ namespace BookReviews.Impl.Repositories
                     bookSearchResult.ImageLinks = searchResult["imageLinks"]?.ToObject<ImageLinks>() ?? null;
                     bookSearchResult.Authors = searchResult["authors"].Select(x => (string)x).ToList();
 
-                    // exclude any books that don't have an ISBN-13 number, as that is the unique identifier
-                    if (bookSearchResult.IndustryIdentifiers.Any(x => x.Type.Equals("ISBN_13", StringComparison.OrdinalIgnoreCase)))
-                        results.Add(bookSearchResult);
+                    results.Add(bookSearchResult);
                 }
                 catch
                 {

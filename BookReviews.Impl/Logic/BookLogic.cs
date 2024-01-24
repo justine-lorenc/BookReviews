@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookReviews.Impl.Entities;
 using BookReviews.Impl.Logic.Interfaces;
 using BookReviews.Impl.Models.Enums;
 using BookReviews.Impl.Repositories.Interfaces;
@@ -29,10 +30,22 @@ namespace BookReviews.Impl.Logic
 
                 bookRecords = await _bookRepository.SearchBooks(searchCategory, searchTerm);
 
-                // TODO: consolidate books with same title and author, then select
-                // the earliest publication date for display
+                // exclude any books that don't have an ISBN-13 number, as that is the unique identifier
+                bookRecords = bookRecords.Where(x => x.IndustryIdentifiers.Any(y => y.Type.Equals("ISBN_13", StringComparison.OrdinalIgnoreCase)))
+                    .Select(x => x).ToList();
+
                 List<Models.Book> books = _mapper.Map<List<Models.Book>>(bookRecords);
-                return books;
+                
+                // remove books that have invalid core details or have not yet been published
+                var finalBooks = new List<Models.Book>();
+                foreach (var book in books)
+                {
+                    if (book.Id != default && !String.IsNullOrWhiteSpace(book.Title) && book.Pages != default
+                        && book.DatePublished <= DateTime.Today && book.Authors.Count > 0 && !String.IsNullOrWhiteSpace(book.Description))
+                        finalBooks.Add(book);
+                }
+
+                return finalBooks;
             }
             catch (Exception ex)
             {

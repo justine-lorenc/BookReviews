@@ -9,6 +9,7 @@ namespace BookReviews.Impl.Models.Enums
     public enum SearchCategory : short
     {
         Title = 0,
-        Author = 1
+        Author = 1,
+        Isbn = 2
     }
 }
