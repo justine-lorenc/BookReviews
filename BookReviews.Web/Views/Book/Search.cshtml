@@ -6,75 +6,54 @@
     ViewBag.Title = "Search";
 }
 
-<div class="container">
-    @using (Html.BeginForm("Search", "Book", FormMethod.Get))
+<div>
+    @using (Html.BeginForm("Search", "Book", FormMethod.Get, new { @class = "inline-form" }))
     {
-        <div class="row py-2">
-            <div class="col">
-                @Html.LabelFor(m => m.SearchCategory, new { @class = "form-label" })
-                @Html.EnumDropDownListFor(m => m.SearchCategory, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.SearchCategory)
-            </div>
-            <div class="col">
-                @Html.LabelFor(m => m.SearchTerm, new { @class = "form-label" })
-                @Html.TextBoxFor(m => m.SearchTerm, new { maxLength = 50, @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.SearchTerm)
-            </div>
+        <div>
+            @Html.EnumDropDownListFor(m => m.SearchCategory)
+            @Html.ValidationMessageFor(m => m.SearchCategory)
         </div>
-        <div class="row py-2">
-            <div class="col">
-                <button type="submit" class="btn btn-primary" value="Submit">Search</button>
-            </div>
+        <div>
+            @Html.TextBoxFor(m => m.SearchTerm, new { maxLength = 50 })
+            @Html.ValidationMessageFor(m => m.SearchTerm)
+        </div>
+        <div>
+            <button type="submit" value="Submit">Search</button>
         </div>
     }
 
     @if (Model != null && !String.IsNullOrWhiteSpace(Model.SearchTerm))
     {
-        if (Model.Results?.Count > 0)
+        <h3>@Model.Results.Count results for "@Model.SearchTerm"</h3>
+
+        foreach (var result in Model.Results)
         {
-            <div>@Model.Results.Count results</div>
-            <table>
-                @foreach (var result in Model.Results)
-                {
-                    <tr>
-                        <td rowspan="5"><img src="@result.CoverUrl" /></td>
-                    </tr>
-                    <tr>
-                        <td>@Html.ActionLink(result.Title, "Index", "Book", new { id = result.Id }, null)</td>
-                    </tr>
-                    <tr>
-                        @{
-                            string authors = ViewExtensions.GetAuthorLinks(result.Authors, 2);
-                        }
-                        <td>
-                            By @Html.Raw(authors)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Published @result.DatePublished.Year</td>
-                    </tr>
-                    <tr>
-                        @{
-                            string description = String.Empty;
-                            if (!String.IsNullOrWhiteSpace(result.Description))
-                            {
-                                description = result.Description.Length > 200
-                                    ? $"{result.Description.Substring(0, 200)}..." : result.Description;
-                            }
-                        }
-                        <td>
-                            @description
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
+            <div class="search-result">
+                @{
+                    string authors = ViewExtensions.GetAuthorLinks(result.Authors, 2);
+
+                    string description = String.Empty;
+                    if (!String.IsNullOrWhiteSpace(result.Description))
+                    {
+                        description = result.Description.Length > 200
+                            ? $"{result.Description.Substring(0, 200)}..." : result.Description;
+                    }
                 }
-            </table>
+                <div class="book-cover">
+                    @Html.Raw(ViewExtensions.GetCoverImage(@result.CoverUrl, false))
+                </div>
+                <div class="book-summary">
+                    <div>
+                        @Html.ActionLink(result.Title, "Index", "Book", new { id = result.Id }, new { @class = "book-title"} )
+                    </div>
+                    
+                    <div>By @Html.Raw(authors)</div>
+                    
+                    <div>Published @result.DatePublished.Year</div>
+                    
+                    <div>@description</div>
+                </div>
+            </div>
         }
-        else
-        {
-            <span>No results found.</span>
-        }
-    }
+     }
 </div>

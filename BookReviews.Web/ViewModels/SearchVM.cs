@@ -10,10 +10,8 @@ namespace BookReviews.Web.ViewModels
 {
     public class SearchVM
     {
-        [Display(Name = "Search By")]
         public SearchCategory SearchCategory { get; set; }
 
-        [Display(Name = "Search Term")]
         public string SearchTerm { get; set; }
 
         public List<Book> Results { get; set; }

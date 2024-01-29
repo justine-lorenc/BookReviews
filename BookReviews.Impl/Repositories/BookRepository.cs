@@ -104,7 +104,7 @@ namespace BookReviews.Impl.Repositories
                     BookSearchResult bookSearchResult = new BookSearchResult()
                     {
                         Title = (string)searchResult["title"],
-                        SubTitle = (string)searchResult["subTitle"] ?? String.Empty,
+                        SubTitle = (string)searchResult["subtitle"] ?? String.Empty,
                         PageCount = Int16.TryParse((string)searchResult["pageCount"], out short pages) ? pages : (short)0,
                         Description = (string)searchResult["description"],
                     };

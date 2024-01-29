@@ -1,17 +1,217 @@
-﻿$color-primary: #D0D8FF;
-$color-secondary: #728AFF;
+﻿$color-1: #17528A;
+$color-2: #7BB5E7;
+$color-3: #9AC778;
+$neutral-1: #FFFFFF;
+$neutral-2: #EFF0f2;
+$neutral-3: #7D7F7C;
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding: 15px;
+$font-stack: Helvetica, sans-serif;
+$font-color: #000000;
+
+nav {
+    margin: 0px;
+    padding: 0px 2px 0px 2px;
+    background-color: $color-1;
+
+    .nav-item {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .nav-logo {
+        padding: 2px 0px 2px 0px;
+    }
+
+    .nav-link {
+        background-color: $color-1;
+        border-bottom: 2px solid $color-1;
+        margin-left: 20px;
+        
+        &:hover {
+            border-bottom: 2px solid $color-3;
+        }
+    }
+
+    a {
+        padding: 14px 2px 10px 2px;
+
+        &:link {
+            text-decoration: none;
+            color: $neutral-1;
+        }
+
+        &:visited {
+            color: $neutral-1;
+        }
+
+        &:hover {
+            color: $color-3;
+        }
+
+        &:active {
+            color: $neutral-1;
+        }
+    }
 }
 
-.main-menu {
-    background-color: $color-primary;
+body {
+    font-family: $font-stack;
+    font-size: 14px;
+    color: $font-color;
+    background-color: $neutral-2;
+    margin: 0px;
+    padding: 0px;
 }
 
-#nav-logo {
-    margin: 10px;
-    max-width: 200px;
-    max-height: 30px;
+.container {
+    padding: 20px 200px 20px 200px;
+}
+
+a {
+    &:link {
+        text-decoration: none;
+        color: $color-1;
+    }
+
+    &:visited {
+        color: $color-1;
+    }
+
+    &:hover {
+        color: $color-1;
+        text-decoration: underline;
+    }
+
+    &:active {
+        color: $color-2;
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-stack;
+    color: $font-color;
+}
+
+form {
+    background-color: $neutral-1;
+    border: 1px solid $neutral-3;
+    border-radius: 2px;
+    padding: 10px;
+
+    &.inline-form {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        align-items: baseline;
+        column-gap: 14px;
+    }
+
+    label {
+        margin-right: 4px;
+    }
+
+    input[type=text] {
+        background-color: $neutral-1;
+        border: 1px solid $neutral-3;
+        border-radius: 2px;
+        padding: 4px 6px;
+        min-width: 240px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    select {
+        background-color: $neutral-1;
+        border: 1px solid $neutral-3;
+        border-radius: 2px;
+        padding: 4px 6px;
+        min-width: 90px;
+
+        option {
+            background-color: $neutral-1;
+            padding: 4px 6px;
+        }
+    }
+}
+
+button {
+    color: $neutral-1;
+    background-color: $color-2;
+    border: none;
+    border-radius: 2px;
+    padding: 4px 6px;
+    text-align: center;
+    text-decoration: none;
+
+    &:hover {
+        background-color: $color-1;
+    }
+}
+
+.search-result {
+    background-color: $neutral-1;
+    border: 1px solid $neutral-3;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+    column-gap: 4px;
+    row-gap: 4px;
+
+    .book-title {
+        font-weight: bold;
+    }
+
+    .book-summary > div {
+        margin: 8px 10px;
+
+        &:first-child {
+            margin-top: 0px;
+        }
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+    }
+}
+
+.book-info {
+    background-color: $neutral-1;
+    border: 1px solid $neutral-3;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-content: flex-start;
+    align-items: flex-start;
+    column-gap: 4px;
+    row-gap: 4px;
+
+    .book-details > div, h3 {
+        margin: 8px 10px;
+
+        &:first-child {
+            margin-top: 0px;
+        }
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+
+        &.core-detail {
+            font-weight: bold;
+        }
+    }
 }

@@ -38,6 +38,23 @@ namespace BookReviews.Web.Utilities
             return authorLinks;
         }
 
+        public static string GetCoverImage(string coverUrl, bool fullSize = true)
+        {
+            string coverImage = String.Empty;
+            string imageUrl = String.Empty;
+            int imageWidth = fullSize ? 145 : 105;
+            int imageHeight = fullSize ? 200 : 160;
+
+            if (String.IsNullOrWhiteSpace(coverUrl))
+                imageUrl = "/Content/Images/GenericCover.png";
+            else
+                imageUrl = coverUrl.Replace("&edge=curl", "");
+
+            coverImage = $"<img src=\"{imageUrl}\" width=\"{imageWidth}\" height=\"{imageHeight}\" alt=\"Book cover\" />";
+
+            return coverImage;
+        }
+
         private static string FormatAuthorLink(string authorName)
         {
             return $"<a href=\"/books/search?searchCategory={(short)SearchCategory.Author}&searchTerm={authorName}\">{authorName}</a>";

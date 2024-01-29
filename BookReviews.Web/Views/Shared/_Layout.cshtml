@@ -8,17 +8,13 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <nav class="nav main-menu">
-        <img id="nav-logo" src="~/Content/Images/BookReviewsLogo.png" alt="Logo">
-        <div class="navbar-nav">
-            @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
-            @Html.ActionLink("Search", "Search", "Book", null, new { @class = "nav-link" })
-        </div>
+    <nav id="nav-bar">
+        <img class="nav-item nav-logo" src="~/Content/Images/BookReviewsLogo.png" width="200" height="40" alt="Logo" />
+        @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-item nav-link " })
+        @Html.ActionLink("Search", "Search", "Book", null, new { @class = "nav-item nav-link " })
     </nav>
-    <div class="container body-content">
+    <div class="container">
         @RenderBody()
-        <footer>
-        </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")

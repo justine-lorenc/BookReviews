@@ -60,6 +60,7 @@
   <ItemGroup>
     <Content Include="Content\app.css" />
     <Content Include="Content\Images\BookReviewsLogo.png" />
+    <Content Include="Content\Images\GenericCover.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\app.scss" />
