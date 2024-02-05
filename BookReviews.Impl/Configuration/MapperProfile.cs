@@ -34,7 +34,12 @@ namespace BookReviews.Impl.Configuration
             CreateMap<Models.Review, Entities.Review>();
 
             CreateMap<Entities.User, Models.User>();
-            CreateMap<Models.User, Entities.User>();
+
+            CreateMap<Models.User, Entities.User>()
+                .ForMember(d => d.DateAdded, src => src.Ignore())
+                .ForMember(d => d.DateUpdated, src => src.Ignore())
+                .ForMember(d => d.PasswordHash, src => src.Ignore())
+                .ForMember(d => d.IsActive, src => src.Ignore());
         }
     }
 }

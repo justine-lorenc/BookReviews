@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using BookReviews.Web.Models;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -8,13 +10,24 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <nav id="nav-bar">
-        <img class="nav-item nav-logo" src="~/Content/Images/BookReviewsLogo.png" width="200" height="40" alt="Logo" />
-        @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-item nav-link " })
-        @Html.ActionLink("Search", "Search", "Book", null, new { @class = "nav-item nav-link " })
-    </nav>
-    <div class="container">
-        @RenderBody()
+    <div class="page">
+        <nav id="nav-bar">
+            <img class="nav-item nav-logo" src="~/Content/Images/BookReviewsLogo.png" width="200" height="40" alt="Logo" />
+
+            @if (CurrentUser.IsLoggedIn())
+            {
+                @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-item nav-link " })
+                @Html.ActionLink("Search", "Search", "Book", null, new { @class = "nav-item nav-link " })
+                @Html.ActionLink("Log Out", "Logout", "Account", null, new { @class = "nav-item nav-link" })
+            }
+            else
+            {
+                @Html.ActionLink("Log In", "Login", "Account", null, new { @class = "nav-item nav-link" })
+            }
+        </nav>
+        <div class="content">
+            @RenderBody()
+        </div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")

@@ -7,6 +7,7 @@ using BookReviews.Impl.Logic.Interfaces;
 using BookReviews.Impl.Repositories;
 using BookReviews.Impl.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,9 +42,9 @@ namespace BookReviews.Web
             builder.Register(ctx =>
             {
                 var services = new ServiceCollection();
-                services.AddHttpClient(Constants.AppSettings.BookSearchClientName, c =>
+                services.AddHttpClient(Globals.AppSettings.BookSearchClientName, c =>
                 {
-                    c.BaseAddress = new Uri(Constants.AppSettings.GoogleBooksApiUrl);
+                    c.BaseAddress = new Uri(Globals.AppSettings.GoogleBooksApiUrl);
                     c.Timeout = TimeSpan.FromMinutes(2);
                     c.DefaultRequestHeaders.Add("accept", "application/json");
                 })
@@ -54,11 +55,16 @@ namespace BookReviews.Web
 
             }).SingleInstance();
 
+            builder.Register(c => HttpContext.Current.GetOwinContext().Authentication)
+                .As<IAuthenticationManager>();
+
             builder.RegisterType<BookLogic>().As<IBookLogic>();
             builder.RegisterType<ReviewLogic>().As<IReviewLogic>();
+            builder.RegisterType<UserLogic>().As<IUserLogic>();
 
             builder.RegisterType<BookRepository>().As<IBookRepository>();
             builder.RegisterType<ReviewRepository>().As<IReviewRepository>();
+            builder.RegisterType<UserRepository>().As<IUserRepository>();
 
             Assembly[] assemblies = new Assembly[] {
                 typeof(BookReviews.Impl.Configuration.MapperProfile).Assembly,

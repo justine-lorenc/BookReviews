@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BookReviews.Impl
 {
-    public static class Constants
+    public static class Globals
     {
         public static class ConnectionStrings
         {
@@ -19,6 +19,8 @@ namespace BookReviews.Impl
             public static string BookSearchClientName = "BookSearch";
             public static string GoogleBooksApiUrl = ConfigurationManager.AppSettings["GoogleBooksApiUrl"].ToString();
             public static string GoogleBooksApiKey = ConfigurationManager.AppSettings["GoogleBooksApiKey"].ToString();
+            public static string HashSalt = ConfigurationManager.AppSettings["HashSalt"].ToString();
+            public static int AuthTicketExpiration = Convert.ToInt32(ConfigurationManager.AppSettings["AuthTicketExpiration"]);
         }
     }
 }

@@ -13,7 +13,7 @@ using Book = BookReviews.Impl.Models.Book;
 namespace BookReviews.Web.Controllers
 {
     [RoutePrefix("books")]
-    public class BookController : Controller
+    public class BookController : BaseController
     {
         private IMapper _mapper;
         private IBookLogic _bookLogic;

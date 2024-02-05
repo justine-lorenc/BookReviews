@@ -13,5 +13,8 @@ namespace BookReviews.Impl.Entities
         public string LastName { get; set; }
         public string DateAdded { get; set; }
         public string DateUpdated { get; set; }
+        public string EmailAddress { get; set; }
+        public string PasswordHash { get; set; }
+        public bool IsActive { get; set; }
     }
 }

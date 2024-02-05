@@ -10,8 +10,11 @@ namespace BookReviews.Web.ViewModels
 {
     public class SearchVM
     {
+        [Required(ErrorMessage = "Required")]
         public SearchCategory SearchCategory { get; set; }
 
+        [Required(ErrorMessage = "Required")]
+        [StringLength(50, ErrorMessage = "Max 50 characters")]
         public string SearchTerm { get; set; }
 
         public List<Book> Results { get; set; }

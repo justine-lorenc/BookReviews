@@ -1,0 +1,32 @@
+﻿@model BookReviews.Web.ViewModels.LoginVM
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div>
+    <h3>Log In</h3>
+
+    @Html.Partial("_ResultMessage")
+
+    <p>
+        New? Create an account @Html.ActionLink("here", "Register", "Account", null, new { @class = "link-bold" }).
+    </p>
+
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-vertical" }))
+    {
+        <div>
+            @Html.LabelFor(m => m.EmailAddress)
+            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = 100 })
+            @Html.ValidationMessageFor(m => m.EmailAddress, null, new { @class = "form-error" })
+        </div>
+        <div>
+            @Html.LabelFor(m => m.Password)
+            @Html.TextBoxFor(m => m.Password, new { maxLength = 50, type = "password" })
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "form-error" })
+        </div>
+        <div>
+            <button type="submit" value="Submit">Log In</button>
+        </div>
+    }
+</div>

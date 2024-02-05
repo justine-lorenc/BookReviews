@@ -29,7 +29,7 @@ namespace BookReviews.Impl.Repositories
 
             string requestUrl = ConstructQueryUrl(searchCategory, searchTerm);
 
-            var client = _httpClientFactory.CreateClient(Constants.AppSettings.BookSearchClientName);
+            var client = _httpClientFactory.CreateClient(Globals.AppSettings.BookSearchClientName);
             var response = await client.GetAsync(requestUrl);
 
             if (!response.IsSuccessStatusCode)
@@ -78,7 +78,7 @@ namespace BookReviews.Impl.Repositories
             queryUrl += "&maxResults=40";
 
             // authenticate the request with the API key
-            queryUrl += $"&key={Constants.AppSettings.GoogleBooksApiKey}";
+            queryUrl += $"&key={Globals.AppSettings.GoogleBooksApiKey}";
 
             return queryUrl;
 

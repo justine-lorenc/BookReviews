@@ -1,0 +1,13 @@
+﻿
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="message-error">@TempData["ErrorMessage"]</div>
+}
+else if (TempData["WarningMessage"] != null)
+{
+    <div class="message-warning">@TempData["WarningMessage"]</div>
+}
+else if (TempData["SuccessMessage"] != null)
+{
+    <div class="message-success">@TempData["SuccessMessage"]</div>
+}

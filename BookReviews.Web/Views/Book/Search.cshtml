@@ -7,7 +7,8 @@
 }
 
 <div>
-    @using (Html.BeginForm("Search", "Book", FormMethod.Get, new { @class = "inline-form" }))
+    <h3>Search</h3>
+    @using (Html.BeginForm("Search", "Book", FormMethod.Get, new { @class = "form-horizontal" }))
     {
         <div>
             @Html.EnumDropDownListFor(m => m.SearchCategory)
@@ -24,7 +25,7 @@
 
     @if (Model != null && !String.IsNullOrWhiteSpace(Model.SearchTerm))
     {
-        <h3>@Model.Results.Count results for "@Model.SearchTerm"</h3>
+        <h4>@Model.Results.Count results for "@Model.SearchTerm"</h4>
 
         foreach (var result in Model.Results)
         {
@@ -44,16 +45,16 @@
                 </div>
                 <div class="book-summary">
                     <div>
-                        @Html.ActionLink(result.Title, "Index", "Book", new { id = result.Id }, new { @class = "book-title"} )
+                        @Html.ActionLink(result.Title, "Index", "Book", new { id = result.Id }, new { @class = "book-title" })
                     </div>
-                    
+
                     <div>By @Html.Raw(authors)</div>
-                    
+
                     <div>Published @result.DatePublished.Year</div>
-                    
+
                     <div>@description</div>
                 </div>
             </div>
         }
-     }
+    }
 </div>

@@ -1,12 +1,20 @@
 ﻿$color-1: #17528A;
 $color-2: #7BB5E7;
 $color-3: #9AC778;
+
 $neutral-1: #FFFFFF;
-$neutral-2: #EFF0f2;
-$neutral-3: #7D7F7C;
+$neutral-2: #000000;
+$neutral-3: #FEFEFE;
+$neutral-4: #E0E0E0;
+$neutral-5: #7D7F7C;
+
+$color-success: #99D393;
+$color-warning: #F7EF5A;
+$color-error: #DF8484;
+$color-error-text: #AF0000;
 
 $font-stack: Helvetica, sans-serif;
-$font-color: #000000;
+$font-color: $neutral-2;
 
 nav {
     margin: 0px;
@@ -37,11 +45,11 @@ nav {
 
         &:link {
             text-decoration: none;
-            color: $neutral-1;
+            color: $neutral-3;
         }
 
         &:visited {
-            color: $neutral-1;
+            color: $neutral-3;
         }
 
         &:hover {
@@ -49,7 +57,7 @@ nav {
         }
 
         &:active {
-            color: $neutral-1;
+            color: $neutral-3;
         }
     }
 }
@@ -58,16 +66,22 @@ body {
     font-family: $font-stack;
     font-size: 14px;
     color: $font-color;
-    background-color: $neutral-2;
+    background-color: $neutral-3;
     margin: 0px;
     padding: 0px;
 }
 
-.container {
-    padding: 20px 200px 20px 200px;
+.content {
+    max-width: 880px;
+    padding: 20px 20px 20px 20px;
+    margin: 0px auto 0px auto;
 }
 
 a {
+    &.link-bold {
+        font-weight: bold;
+    }
+
     &:link {
         text-decoration: none;
         color: $color-1;
@@ -93,31 +107,54 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 form {
-    background-color: $neutral-1;
-    border: 1px solid $neutral-3;
+    background-color: $neutral-3;
+    border: 1px solid $color-2;
     border-radius: 2px;
-    padding: 10px;
+    padding: 14px;
 
-    &.inline-form {
+    &.form-horizontal {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
+        align-items: center;
         align-content: center;
-        align-items: baseline;
         column-gap: 14px;
+        min-width: 50%;
+        max-width: 50%;
+    }
+
+    &.form-vertical {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        row-gap: 14px;
+        min-width: 20%;
+        max-width: 30%;
     }
 
     label {
-        margin-right: 4px;
+        display: block;
+        margin: 0px 0px 8px 0px;
     }
 
-    input[type=text] {
-        background-color: $neutral-1;
-        border: 1px solid $neutral-3;
+    .form-error {
+        display: block;
+        margin: 0px 0px 0px 0px;
+        padding: 4px;
+        color: $color-error-text;
+        max-width: 200px;
+    }
+
+    input[type=text], input[type=password] {
+        background-color: $neutral-3;
+        border: 1px solid $neutral-5;
         border-radius: 2px;
         padding: 4px 6px;
-        min-width: 240px;
+        min-width: 200px;
 
         &:focus {
             outline: none;
@@ -125,21 +162,21 @@ form {
     }
 
     select {
-        background-color: $neutral-1;
-        border: 1px solid $neutral-3;
+        background-color: $neutral-3;
+        border: 1px solid $neutral-5;
         border-radius: 2px;
         padding: 4px 6px;
-        min-width: 90px;
+        min-width: 100px;
 
         option {
-            background-color: $neutral-1;
+            background-color: $neutral-3;
             padding: 4px 6px;
         }
     }
 }
 
 button {
-    color: $neutral-1;
+    color: $neutral-3;
     background-color: $color-2;
     border: none;
     border-radius: 2px;
@@ -152,9 +189,33 @@ button {
     }
 }
 
+.message {
+    border-radius: 2px;
+    padding: 8px;
+    margin: 4px 0px 4px 0px;
+
+    &-success {
+        @extend .message;
+        background-color: $color-success;
+        border: 1px solid $color-success;
+    }
+
+    &-error {
+        @extend .message;
+        background-color: $color-error;
+        border: 1px solid $color-error;
+    }
+
+    &-warning {
+        @extend .message;
+        background-color: $color-warning;
+        border: 1px solid $color-warning;
+    }
+}
+
 .search-result {
-    background-color: $neutral-1;
-    border: 1px solid $neutral-3;
+    background-color: $neutral-3;
+    border: 1px solid $neutral-4;
     border-radius: 2px;
     margin-bottom: 12px;
     padding: 14px;
@@ -162,8 +223,8 @@ button {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    align-content: flex-start;
     align-items: flex-start;
+    align-content: flex-start;
     column-gap: 4px;
     row-gap: 4px;
 
@@ -185,17 +246,16 @@ button {
 }
 
 .book-info {
-    background-color: $neutral-1;
-    border: 1px solid $neutral-3;
+    background-color: $neutral-3;
+    border: 1px solid $neutral-4;
     border-radius: 2px;
-    margin-bottom: 12px;
     padding: 14px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-evenly;
-    align-content: flex-start;
+    justify-content: flex-start;
     align-items: flex-start;
+    align-content: flex-start;
     column-gap: 4px;
     row-gap: 4px;
 

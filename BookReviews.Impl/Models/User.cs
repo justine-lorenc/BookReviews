@@ -11,7 +11,14 @@ namespace BookReviews.Impl.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string DateAdded { get; set; }
-        public string DateUpdated { get; set; }
+        public string EmailAddress { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return $"{FirstName} {LastName}";
+            }
+        }
     }
 }
