@@ -5,7 +5,7 @@
 }
 
 <div>
-    <h3>Register</h3>
+    <h3>@ViewBag.Title</h3>
 
     @Html.Partial("_ResultMessage")
 
@@ -20,6 +20,8 @@
     </p>
     @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-vertical" }))
     {
+        @Html.AntiForgeryToken()
+
         <div>
             @Html.LabelFor(m => m.EmailAddress)
             @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = 100 })

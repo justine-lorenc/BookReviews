@@ -32,6 +32,8 @@ namespace BookReviews.Web
                 ExpireTimeSpan = new TimeSpan(0, Globals.AppSettings.AuthTicketExpiration, 0),
                 SlidingExpiration = true
             });
+
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
         }
     }
 }

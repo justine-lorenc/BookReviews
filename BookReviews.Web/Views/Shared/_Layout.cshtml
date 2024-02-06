@@ -16,9 +16,14 @@
 
             @if (CurrentUser.IsLoggedIn())
             {
-                @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-item nav-link " })
-                @Html.ActionLink("Search", "Search", "Book", null, new { @class = "nav-item nav-link " })
-                @Html.ActionLink("Log Out", "Logout", "Account", null, new { @class = "nav-item nav-link" })
+                @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-item nav-link" })
+                @Html.ActionLink("Search", "Search", "Book", null, new { @class = "nav-item nav-link" })
+
+                using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { @class = "nav-item nav-form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" value="Submit" class="nav-link">Log Out</button>
+                }
             }
             else
             {

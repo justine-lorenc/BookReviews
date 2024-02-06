@@ -11,28 +11,32 @@ nav .nav-logo {
   padding: 2px 0px 2px 0px;
 }
 nav .nav-link {
+  color: #FEFEFE;
   background-color: #17528A;
   border-bottom: 2px solid #17528A;
-  margin-left: 20px;
+  margin: 0px 0px 0px 20px;
+  cursor: pointer;
+}
+nav .nav-link:link {
+  color: #FEFEFE;
+  text-decoration: none;
+}
+nav .nav-link:visited {
+  color: #FEFEFE;
 }
 nav .nav-link:hover {
+  color: #9AC778;
   border-bottom: 2px solid #9AC778;
+}
+nav .nav-link:active {
+  color: #FEFEFE;
 }
 nav a {
   padding: 14px 2px 10px 2px;
 }
-nav a:link {
-  text-decoration: none;
-  color: #FEFEFE;
-}
-nav a:visited {
-  color: #FEFEFE;
-}
-nav a:hover {
-  color: #9AC778;
-}
-nav a:active {
-  color: #FEFEFE;
+nav button {
+  border-radius: 0px;
+  padding: 14px 2px 11px 2px;
 }
 
 body {
@@ -73,13 +77,13 @@ h1, h2, h3, h4, h5, h6 {
   color: #000000;
 }
 
-form {
+form:not(.nav-form) {
   background-color: #FEFEFE;
   border: 1px solid #7BB5E7;
   border-radius: 2px;
   padding: 14px;
 }
-form.form-horizontal {
+form:not(.nav-form).form-horizontal {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -90,7 +94,7 @@ form.form-horizontal {
   min-width: 50%;
   max-width: 50%;
 }
-form.form-vertical {
+form:not(.nav-form).form-vertical {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -101,35 +105,35 @@ form.form-vertical {
   min-width: 20%;
   max-width: 30%;
 }
-form label {
+form:not(.nav-form) label {
   display: block;
   margin: 0px 0px 8px 0px;
 }
-form .form-error {
+form:not(.nav-form) .form-error {
   display: block;
   margin: 0px 0px 0px 0px;
   padding: 4px;
   color: #AF0000;
   max-width: 200px;
 }
-form input[type=text], form input[type=password] {
+form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password] {
   background-color: #FEFEFE;
   border: 1px solid #7D7F7C;
   border-radius: 2px;
   padding: 4px 6px;
   min-width: 200px;
 }
-form input[type=text]:focus, form input[type=password]:focus {
+form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus {
   outline: none;
 }
-form select {
+form:not(.nav-form) select {
   background-color: #FEFEFE;
   border: 1px solid #7D7F7C;
   border-radius: 2px;
   padding: 4px 6px;
   min-width: 100px;
 }
-form select option {
+form:not(.nav-form) select option {
   background-color: #FEFEFE;
   padding: 4px 6px;
 }

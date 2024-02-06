@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookReviews.Impl;
 using BookReviews.Impl.Logic.Interfaces;
+using BookReviews.Web.Models.Enums;
 using BookReviews.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
@@ -42,6 +43,7 @@ namespace BookReviews.Web.Controllers
         [HttpPost]
         [Route("register")]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterVM model)
         {
             if (!model.Password.Equals(model.ConfirmPassword, StringComparison.OrdinalIgnoreCase))
@@ -56,11 +58,11 @@ namespace BookReviews.Web.Controllers
 
             if (!result)
             {
-                TempData["ErrorMessage"] = "Failed to register account";
+                SetResultMessage(MessageType.Error, "Failed to register account");
                 return View(model);
             }
 
-            TempData["SuccessMessage"] = "Successfully registered account";
+            SetResultMessage(MessageType.Success, "Successfully registered account");
 
             return RedirectToAction("Index", "Home");
         }
@@ -78,6 +80,7 @@ namespace BookReviews.Web.Controllers
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginVM model)
         {
             if (!ModelState.IsValid)
@@ -87,27 +90,28 @@ namespace BookReviews.Web.Controllers
 
             if (user == null)
             {
-                TempData["ErrorMessage"] = "The email address or password is incorrect";
+                SetResultMessage(MessageType.Error, "The email address or password is incorrect");
                 return View(model);
             }
 
             LoginUser(user);
 
-            string returnUrl = TempData["ReturnUrl"].ToString();
+            string returnUrl = TempData["ReturnUrl"]?.ToString();
             if (!String.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
-                Response.Redirect(returnUrl);
+                return Redirect(returnUrl);
 
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("logout")]
+        [ValidateAntiForgeryToken]
         public ActionResult Logout()
         {
             LogoutUser();
-            TempData["SuccessMessage"] = "You are now logged out";
+            SetResultMessage(MessageType.Success, "You are now logged out");
 
-            return View("Login");
+            return RedirectToAction("Login");
         }
 
         private void LoginUser(User user)
