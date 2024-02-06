@@ -33,6 +33,9 @@ namespace BookReviews.Impl.Configuration
             CreateMap<Entities.Review, Models.Review>();
             CreateMap<Models.Review, Entities.Review>();
 
+            CreateMap<Entities.Enums.Role, Models.Enums.Role>();
+            CreateMap<Models.Enums.Role, Entities.Enums.Role>();
+
             CreateMap<Entities.User, Models.User>();
 
             CreateMap<Models.User, Entities.User>()

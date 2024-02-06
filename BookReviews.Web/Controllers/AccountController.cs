@@ -14,6 +14,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using User = BookReviews.Impl.Models.User;
+using Role = BookReviews.Impl.Models.Enums.Role;
 
 namespace BookReviews.Web.Controllers
 {
@@ -94,7 +95,7 @@ namespace BookReviews.Web.Controllers
                 return View(model);
             }
 
-            LoginUser(user);
+            await LoginUser(user);
 
             string returnUrl = TempData["ReturnUrl"]?.ToString();
             if (!String.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -114,7 +115,7 @@ namespace BookReviews.Web.Controllers
             return RedirectToAction("Login");
         }
 
-        private void LoginUser(User user)
+        private async Task LoginUser(User user)
         {
             // clear any existing cookie for the user
             LogoutUser();
@@ -125,6 +126,12 @@ namespace BookReviews.Web.Controllers
                 new Claim(ClaimTypes.Name, user.FullName),
                 new Claim("UserId", user.Id.ToString())
             };
+
+            List<Role> userRoles = await _userLogic.GetUserRoles(user.Id);
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+            }
 
             var identity = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
 

@@ -10,5 +10,6 @@ namespace BookReviews.Impl.Logic.Interfaces
     {
         Task<bool> RegisterAccount(Models.User user, string password);
         Task<Models.User> AuthenticateUser(string username, string password);
+        Task<List<Models.Enums.Role>> GetUserRoles(int userId);
     }
 }

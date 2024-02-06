@@ -26,8 +26,8 @@ CREATE TABLE [dbo].[Review] (
     CONSTRAINT [PK_Review] PRIMARY KEY ([Id])
 );
 
-ALTER TABLE [dbo].[Review] ADD CONSTRAINT [FK_Review_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[User] ([Id]);
-ALTER TABLE [dbo].[Review] ADD CONSTRAINT [FK_Review_GenreId] FOREIGN KEY ([GenreId]) REFERENCES [dbo].[Genre] ([Id]);
-ALTER TABLE [dbo].[Review] ADD CONSTRAINT [FK_Review_BookFormatId] FOREIGN KEY ([BookFormatId]) REFERENCES [dbo].[BookFormat] ([Id]);
+ALTER TABLE [dbo].[Review] ADD CONSTRAINT [FK_Review_User] FOREIGN KEY ([UserId]) REFERENCES [dbo].[User] ([Id]);
+ALTER TABLE [dbo].[Review] ADD CONSTRAINT [FK_Review_Genre] FOREIGN KEY ([GenreId]) REFERENCES [dbo].[Genre] ([Id]);
+ALTER TABLE [dbo].[Review] ADD CONSTRAINT [FK_Review_BookFormat] FOREIGN KEY ([BookFormatId]) REFERENCES [dbo].[BookFormat] ([Id]);
 
 GO

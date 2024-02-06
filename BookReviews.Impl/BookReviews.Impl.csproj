@@ -32,12 +32,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Configuration\MapperProfile.cs" />
+    <Compile Include="Entities\Enums\Role.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Entities\Book.cs" />
     <Compile Include="Entities\BookSearchResult.cs" />
     <Compile Include="Entities\Enums\BookFormat.cs" />
     <Compile Include="Logic\Interfaces\IUserLogic.cs" />
     <Compile Include="Logic\UserLogic.cs" />
+    <Compile Include="Models\Enums\Role.cs" />
     <Compile Include="Models\Enums\SearchCategory.cs" />
     <Compile Include="Entities\Genre.cs" />
     <Compile Include="Entities\Review.cs" />
@@ -62,6 +64,7 @@
   <ItemGroup>
     <Content Include="Entities\Scripts\20240111151400_CreateTables.sql" />
     <Content Include="Entities\Scripts\20240111151500_PopulateTypeTables.sql" />
+    <Content Include="Entities\Scripts\20240206111700_AddRoleTables.sql" />
     <Content Include="Entities\Scripts\20240131132200_UpdateUserTable.sql" />
     <Content Include="Entities\Scripts\20240112172200_TableRefactor.sql" />
   </ItemGroup>

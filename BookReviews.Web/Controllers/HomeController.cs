@@ -16,5 +16,12 @@ namespace BookReviews.Web.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        [Route("forbidden")]
+        public ActionResult Forbidden()
+        {
+            return View();
+        }
     }
 }

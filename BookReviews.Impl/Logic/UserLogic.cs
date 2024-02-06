@@ -26,9 +26,9 @@ namespace BookReviews.Impl.Logic
             try
             {
                 // check that an account with this email address does not exist
-                Entities.User existingUser = await _userRepository.GetUser(user.EmailAddress);
+                Entities.User existingRecord = await _userRepository.GetUser(user.EmailAddress);
 
-                if (existingUser != null)
+                if (existingRecord != null)
                     throw new Exception("An account already exists for this email");
 
                 string hashedPassword = HashPassword(user.EmailAddress, password);
@@ -64,13 +64,29 @@ namespace BookReviews.Impl.Logic
                 if (!credentialsValid)
                     throw new Exception("Invalid credentials");
 
-                Models.User user = _mapper.Map<Models.User>(record);
-                return user;
+                Models.User result = _mapper.Map<Models.User>(record);
+                return result;
             }
             catch (Exception ex)
             {
                 // log error here
                 return null;
+            }
+        }
+
+        public async Task<List<Models.Enums.Role>> GetUserRoles(int userId)
+        {
+            try
+            {
+                List<Entities.Enums.Role> records = await _userRepository.GetUserRoles(userId);
+                List<Models.Enums.Role> results = _mapper.Map<List<Models.Enums.Role>>(records);
+
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // log error here
+                return new List<Models.Enums.Role>();
             }
         }
 

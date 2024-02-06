@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using User = BookReviews.Impl.Entities.User;
+using Role = BookReviews.Impl.Entities.Enums.Role;
 
 namespace BookReviews.Impl.Repositories
 {
@@ -40,7 +41,7 @@ namespace BookReviews.Impl.Repositories
         public async Task<User> GetUser(string emailAddress)
         {
             string query = @"SELECT TOP 1 [Id], [FirstName], [LastName], [DateAdded], [DateUpdated], [EmailAddress], [PasswordHash], [IsActive]
-                FROM [dbo].[User] WHERE [EmailAddress] = @EmailAddress";
+                FROM [dbo].[User] WHERE [EmailAddress] = @EmailAddress;";
 
             var parameters = new DynamicParameters();
             parameters.Add("@EmailAddress", emailAddress);
@@ -51,6 +52,20 @@ namespace BookReviews.Impl.Repositories
                 User user = results.FirstOrDefault();
 
                 return user;
+            }
+        }
+
+        public async Task<List<Role>> GetUserRoles(int userId)
+        {
+            string query = @"SELECT [RoleId] FROM [dbo].[UserRole] WHERE [UserId] = @UserId;";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@UserId", userId);
+
+            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
+            {
+                IEnumerable<Role> roles = await connection.QueryAsync<Role>(query, parameters);
+                return roles.ToList();
             }
         }
     }
