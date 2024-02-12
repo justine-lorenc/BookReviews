@@ -1,134 +1,84 @@
-﻿using BookReviews.Impl.Entities;
-using BookReviews.Impl.Models.Enums;
-using BookReviews.Impl.Repositories.Interfaces;
-using Newtonsoft.Json.Linq;
+﻿using BookReviews.Impl.Repositories.Interfaces;
+using Dapper;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using BookSearchResult = BookReviews.Impl.Entities.BookSearchResult;
+using Book = BookReviews.Impl.Entities.Book;
+using Author = BookReviews.Impl.Entities.Author;
 
 namespace BookReviews.Impl.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        private IHttpClientFactory _httpClientFactory;
-
-        public BookRepository(IHttpClientFactory httpClientFactory)
+        public async Task<Book> GetBook(long bookId)
         {
-            _httpClientFactory = httpClientFactory;
-        }
+            string query = @"SELECT TOP 1 [Id], [Title], [SubTitle], [Pages], [DatePublished], [Description], [CoverUrl]
+                FROM [dbo].[Book] WHERE [Id] = @Id;";
 
-        public async Task<List<BookSearchResult>> SearchBooks(SearchCategory searchCategory, string searchTerm)
-        {
-            var books = new List<BookSearchResult>();
+            var parameters = new DynamicParameters();
+            parameters.Add("@Id", bookId);
 
-            string requestUrl = ConstructQueryUrl(searchCategory, searchTerm);
-
-            var client = _httpClientFactory.CreateClient(Globals.AppSettings.BookSearchClientName);
-            var response = await client.GetAsync(requestUrl);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception($"Search failed: {(short)response.StatusCode} {response.ReasonPhrase}");
-
-            string content = await response.Content.ReadAsStringAsync();
-            books = ParseBookSearchResults(content);
-
-            return books;
-        }
-
-        private string ConstructQueryUrl(SearchCategory searchCategory, string searchTerm)
-        {
-            // for more filter options see https://developers.google.com/books/docs/v1/using#WorkingVolumes
-
-            // API method
-            string queryUrl = "books/v1/volumes?";
-
-            // append search parameters
-            string queryType = String.Empty;
-
-            switch (searchCategory)
+            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
             {
-                case SearchCategory.Title:
-                    queryType = "intitle:";
-                    break;
-                case SearchCategory.Author:
-                    queryType += "inauthor:";
-                    break;
-                case SearchCategory.Isbn:
-                    queryType += "isbn:";
-                    break;
-                default:
-                    throw new Exception("Invalid search category");
+                Book book = await connection.QuerySingleOrDefaultAsync<Book>(query, parameters);
+                return book;
             }
-
-            queryUrl += $"q={queryType}{HttpUtility.UrlEncode(searchTerm)}";
-
-            // only retrieve books
-            queryUrl += "&printType=books";
-
-            // written in English
-            queryUrl += "&langRestrict=en";
-
-            // max results to return
-            queryUrl += "&maxResults=40";
-
-            // authenticate the request with the API key
-            queryUrl += $"&key={Globals.AppSettings.GoogleBooksApiKey}";
-
-            return queryUrl;
-
         }
 
-        private List<BookSearchResult> ParseBookSearchResults(string jsonResponse)
+        public async Task<Book> GetFullBook(long bookId)
         {
-            var results = new List<BookSearchResult>();
+            string query = @"SELECT b.[Id], b.[Title], b.[SubTitle], b.[Pages], b.[DatePublished], b.[Description], b.[CoverUrl],
+                a.[Id], a.[Name]
+                FROM [dbo].[Book] AS b
+                INNER JOIN [dbo].[BookAuthor] AS ba ON ba.[BookId] = b.[Id]
+                INNER JOIN [dbo].[Author] AS a ON ba.[AuthorId] = a.[Id]
+                WHERE b.[Id] = @Id;";
 
-            JObject responseData = JObject.Parse(jsonResponse);
-            List<JToken> searchResults = responseData["items"]?.Children()["volumeInfo"]?.ToList() ?? new List<JToken>();
+            var parameters = new DynamicParameters();
+            parameters.Add("@Id", bookId);
 
-            foreach (JToken searchResult in searchResults)
+            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
             {
-                // if the book is missing any core details, skip it
-                if (searchResult["title"] == null || searchResult["pageCount"] == null 
-                    || searchResult["description"] == null|| searchResult["publishedDate"] == null 
-                    || searchResult["industryIdentifiers"] == null || searchResult["authors"] == null)
-                    continue;
-
-                try
-                {
-                    BookSearchResult bookSearchResult = new BookSearchResult()
+                IEnumerable<Book> books = await connection.QueryAsync<Book, Author, Book>(
+                    sql: query,
+                    param: parameters,
+                    map: (book, author) =>
                     {
-                        Title = (string)searchResult["title"],
-                        SubTitle = (string)searchResult["subtitle"] ?? String.Empty,
-                        PageCount = Int16.TryParse((string)searchResult["pageCount"], out short pages) ? pages : (short)0,
-                        Description = (string)searchResult["description"],
-                    };
+                        if (book.Authors == null)
+                            book.Authors = new List<Author>();
 
-                    // for older books, the publication date is typically just the year
-                    string publicationDate = (string)searchResult["publishedDate"];
-                    if (DateTime.TryParse(publicationDate, out DateTime publishedDate))
-                        bookSearchResult.PublishedDate = publishedDate;
-                    else
-                        bookSearchResult.PublishedDate = new DateTime(Convert.ToInt32(publicationDate), 1, 1);
+                        book.Authors.Add(author);
+                        return book;
+                    },
+                    splitOn: "Id");
 
-                    bookSearchResult.IndustryIdentifiers = searchResult["industryIdentifiers"].Select(x => x.ToObject<IndustryIdentifier>()).ToList();
-                    bookSearchResult.ImageLinks = searchResult["imageLinks"]?.ToObject<ImageLinks>() ?? null;
-                    bookSearchResult.Authors = searchResult["authors"].Select(x => (string)x).ToList();
-
-                    results.Add(bookSearchResult);
-                }
-                catch
-                {
-                    // swallow individual failures
-                }
+                return books.FirstOrDefault();
             }
+        }
 
-            return results;
+        public async Task<int> InsertBook(Book book)
+        {
+            string command = @"INSERT INTO [dbo].[Book] ([Id], [Title], [SubTitle], [Pages], [DatePublished], [Description], [CoverUrl])
+                VALUES (@Id, @Title, @SubTitle, @Pages, @DatePublished, @Description, @CoverUrl);";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@Id", book.Id);                 // this is not an identity column, it's the ISBN
+            parameters.Add("@Title", book.Title);
+            parameters.Add("@SubTitle", book.SubTitle);
+            parameters.Add("@Pages", book.Pages);
+            parameters.Add("@DatePublished", book.DatePublished);
+            parameters.Add("@Description", book.Description);
+            parameters.Add("@CoverUrl", book.CoverUrl);
+
+            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
+            {
+                int booksInserted = await connection.ExecuteAsync(command, parameters);
+
+                return booksInserted;
+            }
         }
     }
 }

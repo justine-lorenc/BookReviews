@@ -9,6 +9,8 @@ namespace BookReviews.Impl.Logic.Interfaces
 {
     public interface IBookLogic
     {
+        Task<Models.Book> GetBook(long id);
         Task<List<Models.Book>> SearchBooks(SearchCategory searchCategory, string searchTerm);
+        Task<bool> AddBook(Models.Book book);
     }
 }

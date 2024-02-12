@@ -10,8 +10,8 @@ namespace BookReviews.Impl.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<int> AddUser(User user);
         Task<User> GetUser(string emailAddress);
+        Task<int> InsertUser(User user);
         Task<List<Role>> GetUserRoles(int userId);
     }
 }

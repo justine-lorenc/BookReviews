@@ -72,6 +72,11 @@ a:active {
   color: #7BB5E7;
 }
 
+.horizontal-links > a, .horizontal-links > h3 {
+  display: inline-block;
+  margin-right: 10px;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: Helvetica, sans-serif;
   color: #000000;
@@ -94,6 +99,9 @@ form:not(.nav-form).form-horizontal {
   min-width: 50%;
   max-width: 50%;
 }
+form:not(.nav-form).form-horizontal select {
+  min-width: 100px;
+}
 form:not(.nav-form).form-vertical {
   display: flex;
   flex-direction: column;
@@ -104,6 +112,9 @@ form:not(.nav-form).form-vertical {
   row-gap: 14px;
   min-width: 20%;
   max-width: 30%;
+}
+form:not(.nav-form).form-vertical select {
+  min-width: 200px;
 }
 form:not(.nav-form) label {
   display: block;
@@ -116,22 +127,25 @@ form:not(.nav-form) .form-error {
   color: #AF0000;
   max-width: 200px;
 }
-form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password] {
+form:not(.nav-form) .form-field, form:not(.nav-form) select, form:not(.nav-form) textarea, form:not(.nav-form) input[type=number], form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password] {
   background-color: #FEFEFE;
   border: 1px solid #7D7F7C;
   border-radius: 2px;
   padding: 4px 6px;
-  min-width: 200px;
 }
-form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus {
+form:not(.nav-form) .form-field:focus, form:not(.nav-form) select:focus, form:not(.nav-form) textarea:focus, form:not(.nav-form) input[type=number]:focus, form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus {
   outline: none;
 }
-form:not(.nav-form) select {
-  background-color: #FEFEFE;
-  border: 1px solid #7D7F7C;
-  border-radius: 2px;
-  padding: 4px 6px;
-  min-width: 100px;
+form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password] {
+  min-width: 200px;
+}
+form:not(.nav-form) input[type=number] {
+  min-width: 186px;
+}
+form:not(.nav-form) textarea {
+  font: inherit;
+  min-width: 186px;
+  min-height: 100px;
 }
 form:not(.nav-form) select option {
   background-color: #FEFEFE;
@@ -221,6 +235,48 @@ button:hover {
   margin-bottom: 0px;
 }
 .book-info .book-details > div.core-detail, .book-info h3.core-detail {
+  font-weight: bold;
+}
+
+.reviewed-book {
+  margin: 0px 0px 14px 0px;
+}
+
+.my-review {
+  background-color: #FEFEFE;
+  border: 1px solid #E0E0E0;
+  border-radius: 2px;
+  padding: 14px;
+}
+.my-review > div {
+  margin: 8px 0px;
+}
+.my-review > div:first-child {
+  margin-top: 0px;
+}
+.my-review > div:last-child {
+  margin-bottom: 0px;
+}
+.my-review > div.core-detail {
+  font-weight: bold;
+}
+
+.community-review {
+  background-color: #FEFEFE;
+  border: 1px solid #E0E0E0;
+  border-radius: 2px;
+  padding: 14px;
+}
+.community-review > div {
+  margin: 8px 0px;
+}
+.community-review > div:first-child {
+  margin-top: 0px;
+}
+.community-review > div:last-child {
+  margin-bottom: 0px;
+}
+.community-review > div.core-detail {
   font-weight: bold;
 }
 

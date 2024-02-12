@@ -21,24 +21,48 @@ namespace BookReviews.Impl.Logic
             _userRepository = userRepository;
         }
 
+        public async Task<Models.User> AuthenticateUser(string username, string password)
+        {
+            try
+            {
+                Entities.User userRecord = await _userRepository.GetUser(username);
+
+                if (userRecord == null || !userRecord.IsActive)
+                    throw new Exception("Failed to retrieve user");
+
+                bool credentialsValid = VerifyCredentials(username, password, userRecord.PasswordHash);
+
+                if (!credentialsValid)
+                    throw new Exception("Invalid credentials");
+
+                Models.User userResult = _mapper.Map<Models.User>(userRecord);
+                return userResult;
+            }
+            catch (Exception ex)
+            {
+                // log error here
+                return null;
+            }
+        }
+
         public async Task<bool> RegisterAccount(Models.User user, string password)
         {
             try
             {
                 // check that an account with this email address does not exist
-                Entities.User existingRecord = await _userRepository.GetUser(user.EmailAddress);
+                Entities.User userRecord = await _userRepository.GetUser(user.EmailAddress);
 
-                if (existingRecord != null)
+                if (userRecord != null)
                     throw new Exception("An account already exists for this email");
 
                 string hashedPassword = HashPassword(user.EmailAddress, password);
 
-                Entities.User record = _mapper.Map<Entities.User>(user);
-                record.PasswordHash = hashedPassword;
+                Entities.User newUserRecord = _mapper.Map<Entities.User>(user);
+                newUserRecord.PasswordHash = hashedPassword;
 
-                int result = await _userRepository.AddUser(record);
+                int userId = await _userRepository.InsertUser(newUserRecord);
 
-                if (result == default)
+                if (userId == 0)
                     throw new Exception("Failed to register account");
 
                 return true;
@@ -50,38 +74,14 @@ namespace BookReviews.Impl.Logic
             }
         }
 
-        public async Task<Models.User> AuthenticateUser(string username, string password)
-        {
-            try
-            {
-                Entities.User record = await _userRepository.GetUser(username);
-
-                if (record == null || !record.IsActive)
-                    throw new Exception("Failed to retrieve user");
-
-                bool credentialsValid = VerifyCredentials(username, password, record.PasswordHash);
-
-                if (!credentialsValid)
-                    throw new Exception("Invalid credentials");
-
-                Models.User result = _mapper.Map<Models.User>(record);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                // log error here
-                return null;
-            }
-        }
-
         public async Task<List<Models.Enums.Role>> GetUserRoles(int userId)
         {
             try
             {
-                List<Entities.Enums.Role> records = await _userRepository.GetUserRoles(userId);
-                List<Models.Enums.Role> results = _mapper.Map<List<Models.Enums.Role>>(records);
+                List<Entities.Enums.Role> roleRecords = await _userRepository.GetUserRoles(userId);
+                List<Models.Enums.Role> roleResults = _mapper.Map<List<Models.Enums.Role>>(roleRecords);
 
-                return results;
+                return roleResults;
             }
             catch (Exception ex)
             {
@@ -99,7 +99,6 @@ namespace BookReviews.Impl.Logic
             else
                 return true;
         }
-
 
         private string HashPassword(string username, string password)
         {

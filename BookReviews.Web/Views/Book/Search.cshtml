@@ -9,6 +9,8 @@
 <div>
     <h3>@ViewBag.Title</h3>
 
+    @Html.Partial("_ResultMessage")
+
     @using (Html.BeginForm("Search", "Book", FormMethod.Get, new { @class = "form-horizontal" }))
     {
         <div>
@@ -46,7 +48,7 @@
                 </div>
                 <div class="book-summary">
                     <div>
-                        @Html.ActionLink(result.Title, "Index", "Book", new { id = result.Id }, new { @class = "book-title" })
+                        @Html.Raw(ViewExtensions.GetTitleLink(result.Title, result.Id))
                     </div>
 
                     <div>By @Html.Raw(authors)</div>

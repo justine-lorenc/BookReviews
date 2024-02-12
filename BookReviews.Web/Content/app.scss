@@ -104,6 +104,10 @@ a {
         color: $color-2;
     }
 }
+.horizontal-links > a, .horizontal-links > h3 {
+    display: inline-block;
+    margin-right: 10px;
+}
 
 h1, h2, h3, h4, h5, h6 {
     font-family: $font-stack;
@@ -126,6 +130,10 @@ form:not(.nav-form) {
         column-gap: 14px;
         min-width: 50%;
         max-width: 50%;
+
+        select {
+            min-width: 100px;
+        }
     }
 
     &.form-vertical {
@@ -138,6 +146,10 @@ form:not(.nav-form) {
         row-gap: 14px;
         min-width: 20%;
         max-width: 30%;
+
+        select {
+            min-width: 200px;
+        }
     }
 
     label {
@@ -153,24 +165,36 @@ form:not(.nav-form) {
         max-width: 200px;
     }
 
-    input[type=text], input[type=password] {
+    .form-field {
         background-color: $neutral-3;
         border: 1px solid $neutral-5;
         border-radius: 2px;
         padding: 4px 6px;
-        min-width: 200px;
 
         &:focus {
             outline: none;
         }
     }
 
+    input[type=text], input[type=password] {
+        @extend .form-field;
+        min-width: 200px;
+    }
+
+    input[type=number] {
+        @extend .form-field;
+        min-width: 186px;
+    }
+
+    textarea {
+        @extend .form-field;
+        font: inherit;
+        min-width: 186px;
+        min-height: 100px;
+    }
+
     select {
-        background-color: $neutral-3;
-        border: 1px solid $neutral-5;
-        border-radius: 2px;
-        padding: 4px 6px;
-        min-width: 100px;
+        @extend .form-field;
 
         option {
             background-color: $neutral-3;
@@ -265,6 +289,56 @@ button {
 
     .book-details > div, h3 {
         margin: 8px 10px;
+
+        &:first-child {
+            margin-top: 0px;
+        }
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+
+        &.core-detail {
+            font-weight: bold;
+        }
+    }
+}
+
+.reviewed-book {
+    margin: 0px 0px 14px 0px;
+}
+
+.my-review {
+    background-color: $neutral-3;
+    border: 1px solid $neutral-4;
+    border-radius: 2px;
+    padding: 14px;
+
+    & > div {
+        margin: 8px 0px;
+
+        &:first-child {
+            margin-top: 0px;
+        }
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+
+        &.core-detail {
+            font-weight: bold;
+        }
+    }
+}
+
+.community-review {
+    background-color: $neutral-3;
+    border: 1px solid $neutral-4;
+    border-radius: 2px;
+    padding: 14px;
+
+    & > div {
+        margin: 8px 0px;
 
         &:first-child {
             margin-top: 0px;

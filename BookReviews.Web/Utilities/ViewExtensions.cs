@@ -3,12 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using BookReviews.Impl.Models;
 
 namespace BookReviews.Web.Utilities
 {
     public static class ViewExtensions
     {
-        public static string GetAuthorLinks(List<string> authors, int? listMax = null)
+        public static string GetTitleLink(string title, long bookId)
+        {
+            return $"<a href=\"/books/{bookId}\" class=\"book-title\">{title}</a>";
+        }
+
+        public static string GetAuthorLinks(List<Author> authors, int? listMax = null)
         {
             string authorLinks = String.Empty;
             int listLimit = listMax.HasValue ? listMax.Value : authors.Count;
@@ -19,7 +25,7 @@ namespace BookReviews.Web.Utilities
                 {
                     for (int i = 0; i < listLimit; i++)
                     {
-                        string authorName = authors[i];
+                        string authorName = authors[i].Name;
                         authorLinks += $"{FormatAuthorLink(authorName)}, ";
                     }
 
@@ -30,7 +36,7 @@ namespace BookReviews.Web.Utilities
                 }
                 else
                 {
-                    string authorName = authors.First();
+                    string authorName = authors.Select(x => x.Name).First();
                     authorLinks = FormatAuthorLink(authorName);                
                 }
             }

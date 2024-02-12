@@ -1,37 +1,113 @@
-﻿@model BookReviews.Impl.Models.Book
+﻿@model BookReviews.Web.Models.BookInfo
 @using BookReviews.Impl.Models.Enums;
+@using BookReviews.Web.Models;
 @using BookReviews.Web.Utilities;
 
 @{
-    ViewBag.Title = Model.Title;
+    ViewBag.Title = Model.Book.Title;
 }
 
-@Html.HiddenFor(m => m.Id)
+@Html.Partial("_ResultMessage")
+
+@Html.HiddenFor(m => m.Book.Id)
 
 <div class="book-info">
     @{
-        string authors = ViewExtensions.GetAuthorLinks(Model.Authors);
+        string authors = ViewExtensions.GetAuthorLinks(Model.Book.Authors);
     }
 
     <div class="book-cover">
-        @Html.Raw(ViewExtensions.GetCoverImage(Model.CoverUrl))
+        @Html.Raw(ViewExtensions.GetCoverImage(Model.Book.CoverUrl))
     </div>
 
     <div class="book-details">
-        <h3>@Model.Title</h3>
+        <h3>@Model.Book.Title</h3>
 
-        @if (!String.IsNullOrWhiteSpace(Model.SubTitle))
+        @if (!String.IsNullOrWhiteSpace(Model.Book.SubTitle))
         {
-            <div>@Model.SubTitle</div>
+            <div>@Model.Book.SubTitle</div>
         }
 
         <div class="core-detail">By @Html.Raw(authors)</div>
 
-        <div class="core-detail">@Model.Pages pages</div>
+        <div class="core-detail">@Model.Book.Pages pages</div>
 
-        <div class="core-detail">Published @Model.DatePublished.ToString("MMMM d, yyyy")</div>
+        <div class="core-detail">Published @Model.Book.DatePublished.ToString("MMMM d, yyyy")</div>
 
-        <div>@Model.Description</div>
+        <div>@Model.Book.Description</div>
+    </div>
+</div>
+<br />
+@*TODO: Add a star icon and add/edit/delete icons*@
+<div class="book-reviews">
+    @if (Model.UserReview != null)
+    {
+        @Html.HiddenFor(m => m.UserReview.Id)
+
+        <div class="horizontal-links">
+            <h3>My Review</h3>
+
+            @if (CurrentUser.HasAbility(Role.EditReview))
+            {
+                @Html.ActionLink("Edit", "EditReview", "Review", new { id = Model.UserReview.Id }, null)
+            }
+            @if (CurrentUser.HasAbility(Role.DeleteReview))
+            {
+                <a href="" id="btn-delete-review" data-review-id="@Model.UserReview.Id" data-book-id="@Model.Book.Id">Delete</a>
+            }
+        </div>
+
+        string genreCategory = @Model.UserReview.Genre.IsFiction ? "Fiction" : "Nonfiction";
+
+        <div class="my-review">
+            <div class="core-detail">@Model.UserReview.Rating.ToString("#.0") stars</div>
+            <div class="core-detail">@Model.UserReview.BookFormat format</div>
+            <div class="core-detail">@Model.UserReview.Genre.Name - @genreCategory</div>
+            <div>@Model.UserReview.Notes</div>
+        </div>
+    }
+    else
+    {
+        <div>
+            <h3>My Review</h3>
+
+            @if (CurrentUser.HasAbility(Role.AddReview))
+            {
+                @Html.ActionLink("Write Review", "AddReview", "Review", new { bookId = Model.Book.Id }, null)
+            }
+        </div>
+    }
+
+    <br />
+    <div class="community-reviews">
+        <h3>Community Reviews</h3>
+        @foreach (var review in Model.CommunityReviews)
+        {
+            <div>@review.Rating stars</div>
+            <div>@review.Notes</div>
+        }
     </div>
 </div>
 
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#btn-delete-review").on("click", function (event) {
+                event.preventDefault();
+                const reviewId = $(this).attr("data-review-id");
+                const bookId = $(this).attr("data-book-id");
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteReview", "Review", new { id = Model.UserReview?.Id ?? 0, bookId = Model.Book?.Id ?? 0 })",
+                    data: { id: reviewId, bookId: bookId },
+                    dataType: "json",
+                    success: function() {
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+}

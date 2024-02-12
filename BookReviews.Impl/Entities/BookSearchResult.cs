@@ -8,6 +8,12 @@ namespace BookReviews.Impl.Entities
 {
     public class BookSearchResult
     {
+        public BookSearchResult()
+        {
+            IndustryIdentifiers = new List<IndustryIdentifier>();
+            Authors = new List<string>();
+        }
+
         public string Title { get; set; }
         public string SubTitle { get; set; }
         public short PageCount { get; set; }

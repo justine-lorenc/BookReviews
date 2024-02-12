@@ -62,8 +62,11 @@ namespace BookReviews.Web
             builder.RegisterType<ReviewLogic>().As<IReviewLogic>();
             builder.RegisterType<UserLogic>().As<IUserLogic>();
 
+            builder.RegisterType<AuthorRepository>().As<IAuthorRepository>();
             builder.RegisterType<BookRepository>().As<IBookRepository>();
+            builder.RegisterType<GenreRepository>().As<IGenreRepository>();
             builder.RegisterType<ReviewRepository>().As<IReviewRepository>();
+            builder.RegisterType<SearchRepository>().As<ISearchRepository>();
             builder.RegisterType<UserRepository>().As<IUserRepository>();
 
             Assembly[] assemblies = new Assembly[] {

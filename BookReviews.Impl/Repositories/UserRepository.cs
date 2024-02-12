@@ -13,7 +13,23 @@ namespace BookReviews.Impl.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public async Task<int> AddUser(User user)
+        public async Task<User> GetUser(string emailAddress)
+        {
+            string query = @"SELECT TOP 1 [Id], [FirstName], [LastName], [DateAdded], [DateUpdated], [EmailAddress], [PasswordHash], [IsActive]
+                FROM [dbo].[User] WHERE [EmailAddress] = @EmailAddress;";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@EmailAddress", emailAddress);
+
+            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
+            {
+                User user = await connection.QuerySingleOrDefaultAsync<User>(query, parameters);
+
+                return user;
+            }
+        }
+
+        public async Task<int> InsertUser(User user)
         {
             string command = @"INSERT INTO [dbo].[User] ([FirstName], [LastName], [EmailAddress], [PasswordHash], [DateAdded], [DateUpdated], [IsActive]) 
                 VALUES (@FirstName, @LastName, @EmailAddress, @PasswordHash, @DateAdded, @DateUpdated, @IsActive); 
@@ -35,23 +51,6 @@ namespace BookReviews.Impl.Repositories
                 int userId = await connection.ExecuteScalarAsync<int>(command, parameters);
 
                 return userId;
-            }
-        }
-
-        public async Task<User> GetUser(string emailAddress)
-        {
-            string query = @"SELECT TOP 1 [Id], [FirstName], [LastName], [DateAdded], [DateUpdated], [EmailAddress], [PasswordHash], [IsActive]
-                FROM [dbo].[User] WHERE [EmailAddress] = @EmailAddress;";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@EmailAddress", emailAddress);
-
-            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
-            {
-                IEnumerable<User> results = await connection.QueryAsync<User>(query, parameters);
-                User user = results.FirstOrDefault();
-
-                return user;
             }
         }
 

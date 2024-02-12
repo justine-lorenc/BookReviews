@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Configuration\MapperProfile.cs" />
+    <Compile Include="Entities\Author.cs" />
     <Compile Include="Entities\Enums\Role.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Entities\Book.cs" />
@@ -39,6 +40,7 @@
     <Compile Include="Entities\Enums\BookFormat.cs" />
     <Compile Include="Logic\Interfaces\IUserLogic.cs" />
     <Compile Include="Logic\UserLogic.cs" />
+    <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Enums\Role.cs" />
     <Compile Include="Models\Enums\SearchCategory.cs" />
     <Compile Include="Entities\Genre.cs" />
@@ -54,8 +56,14 @@
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AuthorRepository.cs" />
     <Compile Include="Repositories\BookRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IAuthorRepository.cs" />
     <Compile Include="Repositories\Interfaces\IBookRepository.cs" />
+    <Compile Include="Repositories\SearchRepository.cs" />
+    <Compile Include="Repositories\GenreRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IGenreRepository.cs" />
+    <Compile Include="Repositories\Interfaces\ISearchRepository.cs" />
     <Compile Include="Repositories\Interfaces\IReviewRepository.cs" />
     <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Repositories\ReviewRepository.cs" />
@@ -64,6 +72,7 @@
   <ItemGroup>
     <Content Include="Entities\Scripts\20240111151400_CreateTables.sql" />
     <Content Include="Entities\Scripts\20240111151500_PopulateTypeTables.sql" />
+    <Content Include="Entities\Scripts\20240208134000_AddBookTables.sql" />
     <Content Include="Entities\Scripts\20240206111700_AddRoleTables.sql" />
     <Content Include="Entities\Scripts\20240131132200_UpdateUserTable.sql" />
     <Content Include="Entities\Scripts\20240112172200_TableRefactor.sql" />
@@ -147,6 +156,7 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

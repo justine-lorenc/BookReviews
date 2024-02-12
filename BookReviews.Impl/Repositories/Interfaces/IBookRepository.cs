@@ -1,15 +1,16 @@
-﻿using BookReviews.Impl.Models.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BookSearchResult = BookReviews.Impl.Entities.BookSearchResult;
+using Book = BookReviews.Impl.Entities.Book;
 
 namespace BookReviews.Impl.Repositories.Interfaces
 {
     public interface IBookRepository
     {
-        Task<List<BookSearchResult>> SearchBooks(SearchCategory searchCategory, string searchTerm);
+        Task<Book> GetBook(long bookId);
+        Task<Book> GetFullBook(long bookId);
+        Task<int> InsertBook(Book book);
     }
 }

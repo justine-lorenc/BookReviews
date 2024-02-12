@@ -52,15 +52,19 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BookController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Filters\HasAbilityAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BookInfo.cs" />
     <Compile Include="Models\CurrentUser.cs" />
     <Compile Include="Models\Enums\MessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\ViewExtensions.cs" />
+    <Compile Include="ViewModels\AddReviewVM.cs" />
+    <Compile Include="ViewModels\EditReviewVM.cs" />
     <Compile Include="ViewModels\LoginVM.cs" />
     <Compile Include="ViewModels\RegisterVM.cs" />
     <Compile Include="ViewModels\SearchVM.cs" />
@@ -102,6 +106,9 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_ResultMessage.cshtml" />
     <Content Include="Views\Shared\Forbidden.cshtml" />
+    <Content Include="Views\Review\AddReview.cshtml" />
+    <Content Include="Views\Review\EditReview.cshtml" />
+    <Content Include="Views\Review\_ReviewFields.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

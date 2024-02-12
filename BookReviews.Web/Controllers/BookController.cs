@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BookReviews.Impl.Logic.Interfaces;
+using BookReviews.Impl.Models;
 using BookReviews.Impl.Models.Enums;
+using BookReviews.Web.Models;
 using BookReviews.Web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -17,22 +19,35 @@ namespace BookReviews.Web.Controllers
     {
         private IMapper _mapper;
         private IBookLogic _bookLogic;
+        private IReviewLogic _reviewLogic;
 
-        public BookController(IMapper mapper, IBookLogic bookLogic)
+        public BookController(IMapper mapper, IBookLogic bookLogic, IReviewLogic reviewLogic)
         {
             _mapper = mapper;
             _bookLogic = bookLogic;
+            _reviewLogic = reviewLogic;
         }
 
         [HttpGet]
         [Route("{id:long}")]
         public async Task<ActionResult> Index(long id)
         {
-            if (id == default)
-                return View();
+            if (id == 0)
+                throw new Exception("Invalid book Id");
 
-            List<Book> results = await _bookLogic.SearchBooks(SearchCategory.Isbn, id.ToString());
-            Book model = results.FirstOrDefault();
+            Book book = await _bookLogic.GetBook(id);
+            List<Review> reviews = await _reviewLogic.GetReviews(id);
+            Review currentUserReview = reviews.Where(x => x.Author.Id == CurrentUser.Id).FirstOrDefault();
+
+            if (currentUserReview != null)
+                reviews.Remove(currentUserReview);
+
+            var model = new BookInfo()
+            {
+                Book = book,
+                UserReview = currentUserReview,
+                CommunityReviews = reviews
+            };
 
             return View(model);
         }

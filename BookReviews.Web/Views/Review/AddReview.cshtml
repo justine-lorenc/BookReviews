@@ -1,0 +1,28 @@
+﻿@model BookReviews.Web.ViewModels.AddReviewVM
+@using BookReviews.Web.Utilities;
+
+@{ 
+    ViewBag.Title = "Add Review";
+}
+
+<div>
+    <h3>@ViewBag.Title</h3>
+    
+    @Html.Partial("_ResultMessage")
+
+    <div class="reviewed-book">
+        @Html.Raw(ViewExtensions.GetTitleLink(Model.Book.Title, Model.Book.Id)) by
+        @Html.Raw(ViewExtensions.GetAuthorLinks(Model.Book.Authors))
+    </div>
+
+    @using (Html.BeginForm("AddReview", "Review", FormMethod.Post, new { @class = "form-vertical" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.Partial("_ReviewFields", Model)
+
+        <div>
+            <button type="submit" value="Submit">Submit</button>
+        </div>
+    }
+</div>

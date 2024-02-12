@@ -11,6 +11,11 @@ namespace BookReviews.Impl.Configuration
     {
         public MapperProfile()
         {
+            CreateMap<Entities.Author, Models.Author>();
+            CreateMap<Models.Author, Entities.Author>();
+
+            CreateMap<string, Models.Author>().ConvertUsing<AuthorTypeConverter>();
+
             CreateMap<Entities.Book, Models.Book>();
             CreateMap<Models.Book, Entities.Book>();
 
@@ -43,6 +48,15 @@ namespace BookReviews.Impl.Configuration
                 .ForMember(d => d.DateUpdated, src => src.Ignore())
                 .ForMember(d => d.PasswordHash, src => src.Ignore())
                 .ForMember(d => d.IsActive, src => src.Ignore());
+        }
+
+        public class AuthorTypeConverter: ITypeConverter<string, Models.Author>
+        {
+            public Models.Author Convert(string source, Models.Author destination, ResolutionContext context)
+            {
+                var author = new Models.Author() { Name = source };
+                return author;
+            }
         }
     }
 }
