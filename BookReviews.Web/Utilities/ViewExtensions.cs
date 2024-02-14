@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BookReviews.Impl.Models;
+using System.Web.Mvc;
+using BookReviews.Web.Models.Enums;
 
 namespace BookReviews.Web.Utilities
 {
@@ -59,6 +61,18 @@ namespace BookReviews.Web.Utilities
             coverImage = $"<img src=\"{imageUrl}\" width=\"{imageWidth}\" height=\"{imageHeight}\" alt=\"Book cover\" />";
 
             return coverImage;
+        }
+
+        public static Dictionary<int, string> GetSortByDropDown()
+        {
+            var dictionary = new Dictionary<int, string>();
+
+            foreach (SortBy value in EnumExtensions.GetValuesInOrder(typeof(SortBy)))
+            {
+                dictionary.Add((short)value, value.GetDisplayName());
+            }
+
+            return dictionary;
         }
 
         private static string FormatAuthorLink(string authorName)

@@ -1,0 +1,81 @@
+﻿@model BookReviews.Web.Models.ReviewInfo
+@using BookReviews.Impl.Models.Enums;
+@using BookReviews.Web.Models;
+@using BookReviews.Web.Models.Enums;
+@using BookReviews.Web.Utilities;
+
+
+<div class="my-review">
+    @if (Model.UserReview != null)
+    {
+        <div class="horizontal-links">
+            <h3>My Review</h3>
+
+            @if (CurrentUser.HasAbility(Role.EditReview))
+            {
+                @Html.ActionLink("Edit", "EditReview", "Review", new { id = Model.UserReview.Id }, null)
+            }
+            @if (CurrentUser.HasAbility(Role.DeleteReview))
+            {
+                <a href="" id="btn-delete-review" data-review-id="@Model.UserReview.Id" data-book-id="@Model.BookId">Delete</a>
+            }
+        </div>
+
+        string genreCategory = @Model.UserReview.Genre.IsFiction ? "Fiction" : "Nonfiction";
+
+<div class="user-review">
+    <div class="right-align">@Model.UserReview.DateAdded.ToString("MMMM d, yyyy")</div>
+
+    <div class="core-detail"><img src="/Content/Images/GoldStar.png" alt="Gold Star" class="star-icon" width="18" height="16">@Model.UserReview.Rating.ToString("0.0") stars</div>
+
+    <div class="core-detail">@Model.UserReview.BookFormat format</div>
+
+    <div class="core-detail">@Model.UserReview.Genre.Name (@genreCategory)</div>
+
+    @if (!String.IsNullOrWhiteSpace(Model.UserReview.Notes))
+    {
+        <div>@Model.UserReview.Notes</div>
+    }
+</div>
+    }
+    else
+    {
+        <h3>My Review</h3>
+
+        if (CurrentUser.HasAbility(Role.AddReview))
+        {
+            @Html.ActionLink("Write Review", "AddReview", "Review", new { bookId = Model.BookId }, null)
+        }
+    }
+</div>
+
+<div class="community-reviews">
+    <h3>Community Reviews</h3>
+
+    <div class="review-stats">
+        @Model.TotalReviews total reviews | @Model.AverageRating.ToString("0.00") average rating
+    </div>
+
+    <div class="review-sort">
+        @Html.DropDownList("SortBy", new SelectList(ViewExtensions.GetSortByDropDown(), "Key", "Value", (int)SortBy.DateDescending),
+        new { @id = "review-sort-select", @data_book_id = Model.BookId })
+    </div>
+
+    @foreach (var review in Model.CommunityReviews)
+    {
+        string reviewAuthor = $"{review.Author.FirstName} {review.Author.LastName.Substring(0, 1)}.";
+
+        <div class="user-review">
+            <div class="right-align">@review.DateAdded.ToString("MMMM d, yyyy")</div>
+
+            <div class="core-detail">@reviewAuthor</div>
+
+            <div class="core-detail"><img src="/Content/Images/GoldStar.png" alt="Gold Star" class="star-icon" width="18" height="16">@review.Rating.ToString("#.0") stars</div>
+
+            @if (!String.IsNullOrWhiteSpace(review.Notes))
+            {
+                <div>@review.Notes</div>
+            }
+        </div>
+    }
+</div>

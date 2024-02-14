@@ -127,15 +127,6 @@ form:not(.nav-form) .form-error {
   color: #AF0000;
   max-width: 200px;
 }
-form:not(.nav-form) .form-field, form:not(.nav-form) select, form:not(.nav-form) textarea, form:not(.nav-form) input[type=number], form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password] {
-  background-color: #FEFEFE;
-  border: 1px solid #7D7F7C;
-  border-radius: 2px;
-  padding: 4px 6px;
-}
-form:not(.nav-form) .form-field:focus, form:not(.nav-form) select:focus, form:not(.nav-form) textarea:focus, form:not(.nav-form) input[type=number]:focus, form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus {
-  outline: none;
-}
 form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password] {
   min-width: 200px;
 }
@@ -150,6 +141,16 @@ form:not(.nav-form) textarea {
 form:not(.nav-form) select option {
   background-color: #FEFEFE;
   padding: 4px 6px;
+}
+
+.input-field, .review-sort > select, form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password], form:not(.nav-form) input[type=number], form:not(.nav-form) textarea, form:not(.nav-form) select {
+  background-color: #FEFEFE;
+  border: 1px solid #7D7F7C;
+  border-radius: 2px;
+  padding: 4px 6px;
+}
+.input-field:focus, .review-sort > select:focus, form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus, form:not(.nav-form) input[type=number]:focus, form:not(.nav-form) textarea:focus, form:not(.nav-form) select:focus {
+  outline: none;
 }
 
 button {
@@ -216,6 +217,7 @@ button:hover {
   border: 1px solid #E0E0E0;
   border-radius: 2px;
   padding: 14px;
+  margin: 0px 0px 20px 0px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -225,16 +227,16 @@ button:hover {
   column-gap: 4px;
   row-gap: 4px;
 }
-.book-info .book-details > div, .book-info h3 {
+.book-info .book-details > div, .book-info .book-details > a, .book-info h3 {
   margin: 8px 10px;
 }
-.book-info .book-details > div:first-child, .book-info h3:first-child {
+.book-info .book-details > div:first-child, .book-info .book-details > a:first-child, .book-info h3:first-child {
   margin-top: 0px;
 }
-.book-info .book-details > div:last-child, .book-info h3:last-child {
+.book-info .book-details > div:last-child, .book-info .book-details > a:last-child, .book-info h3:last-child {
   margin-bottom: 0px;
 }
-.book-info .book-details > div.core-detail, .book-info h3.core-detail {
+.book-info .book-details > div.core-detail, .book-info .book-details > a.core-detail, .book-info h3.core-detail {
   font-weight: bold;
 }
 
@@ -242,42 +244,48 @@ button:hover {
   margin: 0px 0px 14px 0px;
 }
 
-.my-review {
-  background-color: #FEFEFE;
-  border: 1px solid #E0E0E0;
-  border-radius: 2px;
-  padding: 14px;
-}
-.my-review > div {
-  margin: 8px 0px;
-}
-.my-review > div:first-child {
-  margin-top: 0px;
-}
-.my-review > div:last-child {
-  margin-bottom: 0px;
-}
-.my-review > div.core-detail {
-  font-weight: bold;
+.star-icon {
+  margin: 0px 8px 0px 0px;
+  vertical-align: -1px;
 }
 
-.community-review {
+.user-review {
   background-color: #FEFEFE;
   border: 1px solid #E0E0E0;
   border-radius: 2px;
   padding: 14px;
+  margin: 0px 0px 20px 0px;
 }
-.community-review > div {
+.user-review > div {
   margin: 8px 0px;
 }
-.community-review > div:first-child {
+.user-review > div:first-child {
   margin-top: 0px;
 }
-.community-review > div:last-child {
+.user-review > div:last-child {
   margin-bottom: 0px;
 }
-.community-review > div.core-detail {
+.user-review > div.core-detail {
   font-weight: bold;
+}
+.user-review .right-align {
+  float: right;
+}
+
+.community-reviews {
+  margin: 30px 0px 0px 0px;
+}
+
+.review-stats {
+  margin: 0px 0px 14px 0px;
+}
+
+.review-sort {
+  margin: 0px 0px 14px 0px;
+}
+.review-sort > select option {
+  background-color: #FEFEFE;
+  padding: 4px 6px;
 }
 
 /*# sourceMappingURL=app.css.map */

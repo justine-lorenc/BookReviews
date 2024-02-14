@@ -49,7 +49,7 @@ namespace BookReviews.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            model.AuthorId = CurrentUser.Id;
+            model.UserId = CurrentUser.Id;
             Review review = _mapper.Map<Review>(model);
             bool result = await _reviewLogic.AddReview(review);
 

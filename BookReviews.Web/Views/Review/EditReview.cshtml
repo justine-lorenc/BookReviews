@@ -19,7 +19,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.ReviewId)
-        @Html.HiddenFor(m => m.AuthorId)
+        @Html.HiddenFor(m => m.UserId)
 
         @Html.Partial("_ReviewFields", (BookReviews.Web.ViewModels.AddReviewVM)Model)
 

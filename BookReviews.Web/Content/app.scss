@@ -165,41 +165,41 @@ form:not(.nav-form) {
         max-width: 200px;
     }
 
-    .form-field {
-        background-color: $neutral-3;
-        border: 1px solid $neutral-5;
-        border-radius: 2px;
-        padding: 4px 6px;
-
-        &:focus {
-            outline: none;
-        }
-    }
-
     input[type=text], input[type=password] {
-        @extend .form-field;
+        @extend .input-field;
         min-width: 200px;
     }
 
     input[type=number] {
-        @extend .form-field;
+        @extend .input-field;
         min-width: 186px;
     }
 
     textarea {
-        @extend .form-field;
+        @extend .input-field;
         font: inherit;
         min-width: 186px;
         min-height: 100px;
     }
 
     select {
-        @extend .form-field;
+        @extend .input-field;
 
         option {
             background-color: $neutral-3;
             padding: 4px 6px;
         }
+    }
+}
+
+.input-field {
+    background-color: $neutral-3;
+    border: 1px solid $neutral-5;
+    border-radius: 2px;
+    padding: 4px 6px;
+
+    &:focus {
+        outline: none;
     }
 }
 
@@ -278,6 +278,7 @@ button {
     border: 1px solid $neutral-4;
     border-radius: 2px;
     padding: 14px;
+    margin: 0px 0px 20px 0px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -287,7 +288,7 @@ button {
     column-gap: 4px;
     row-gap: 4px;
 
-    .book-details > div, h3 {
+    .book-details > div, .book-details > a, h3 {
         margin: 8px 10px;
 
         &:first-child {
@@ -308,11 +309,17 @@ button {
     margin: 0px 0px 14px 0px;
 }
 
-.my-review {
+.star-icon {
+    margin: 0px 8px 0px 0px;
+    vertical-align: -1px;
+}
+
+.user-review {
     background-color: $neutral-3;
     border: 1px solid $neutral-4;
     border-radius: 2px;
     padding: 14px;
+    margin: 0px 0px 20px 0px;
 
     & > div {
         margin: 8px 0px;
@@ -329,27 +336,29 @@ button {
             font-weight: bold;
         }
     }
+
+    .right-align {
+        float: right;
+    }
 }
 
-.community-review {
-    background-color: $neutral-3;
-    border: 1px solid $neutral-4;
-    border-radius: 2px;
-    padding: 14px;
+.community-reviews {
+    margin: 30px 0px 0px 0px;
+}
 
-    & > div {
-        margin: 8px 0px;
+.review-stats {
+    margin: 0px 0px 14px 0px;
+}
 
-        &:first-child {
-            margin-top: 0px;
-        }
+.review-sort {
+    margin: 0px 0px 14px 0px;
 
-        &:last-child {
-            margin-bottom: 0px;
-        }
+    & > select {
+        @extend .input-field;
 
-        &.core-detail {
-            font-weight: bold;
+        option {
+            background-color: $neutral-3;
+            padding: 4px 6px;
         }
     }
 }

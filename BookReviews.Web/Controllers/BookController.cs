@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Book = BookReviews.Impl.Models.Book;
+using BookReviews.Web.Models.Enums;
 
 namespace BookReviews.Web.Controllers
 {
@@ -30,26 +31,31 @@ namespace BookReviews.Web.Controllers
 
         [HttpGet]
         [Route("{id:long}")]
-        public async Task<ActionResult> Index(long id)
+        public async Task<ActionResult> Index(long id, SortBy sortReviewsBy = SortBy.DateDescending)
         {
             if (id == 0)
-                throw new Exception("Invalid book Id");
+                throw new Exception("Invalid book ID");
 
             Book book = await _bookLogic.GetBook(id);
-            List<Review> reviews = await _reviewLogic.GetReviews(id);
-            Review currentUserReview = reviews.Where(x => x.Author.Id == CurrentUser.Id).FirstOrDefault();
 
-            if (currentUserReview != null)
-                reviews.Remove(currentUserReview);
+            ReviewInfo reviewInfo = await GetReviewInfo(id, sortReviewsBy);
 
             var model = new BookInfo()
             {
                 Book = book,
-                UserReview = currentUserReview,
-                CommunityReviews = reviews
+                Reviews = reviewInfo
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("{id:long}/reviews")]
+        public async Task<ActionResult> GetReviews(long id, SortBy sortBy = SortBy.DateDescending)
+        {
+            ReviewInfo model = await GetReviewInfo(id, sortBy);
+
+            return PartialView("~/Views/Review/_BookReviews.cshtml", model);
         }
 
         [HttpGet]
@@ -71,15 +77,64 @@ namespace BookReviews.Web.Controllers
             // initialize results list
             List<Book> results = await _bookLogic.SearchBooks(searchCategory, searchTerm);
 
-            // group books with the same title and author, then display the earliest published version
-            // from each group
-            results = results.GroupBy(x => new { x.Title, Author = x.Authors.FirstOrDefault() })
-                .Select(x => x.OrderBy(y => y.DatePublished).First()).ToList();
+            // group books with the same title and author(s), then display the earliest published
+            // edition from each group
+            results = results.GroupBy(b => 
+                new { 
+                    b.Title, 
+                    Author = b.Authors.OrderBy(x => x.Name).Select(x => x.Name).FirstOrDefault() 
+                })
+                .Select(g => g.OrderBy(b => b.DatePublished).First()).ToList();
 
             // TODO: pagination may be needed
             model.Results = results;
 
             return View(model);
+        }
+
+        private async Task<ReviewInfo> GetReviewInfo(long bookId, SortBy sortBy)
+        {
+            List<Review> reviews = await _reviewLogic.GetReviews(bookId);
+
+            // calculate stats
+            decimal totalReviews = (decimal)reviews.Count;
+            decimal ratingSum = reviews.Select(x => (decimal)x.Rating).Sum();
+            decimal averageRating = totalReviews == 0 ? 0 : (ratingSum / totalReviews);
+            averageRating = Math.Round(averageRating, 2);
+
+            // find current user's review
+            Review currentUserReview = reviews.Where(x => x.Author.Id == CurrentUser.Id).FirstOrDefault();
+
+            if (currentUserReview != null)
+                reviews.Remove(currentUserReview);
+
+            // sort community reviews
+            switch (sortBy)
+            {
+                case SortBy.DateAscending:
+                    reviews = reviews.OrderBy(x => x.DateAdded).ToList();
+                    break;
+                case SortBy.DateDescending:
+                    reviews = reviews.OrderByDescending(x => x.DateAdded).ToList();
+                    break;
+                case SortBy.RatingAscending:
+                    reviews = reviews.OrderBy(x => x.Rating).ToList();
+                    break;
+                case SortBy.RatingDescending:
+                    reviews = reviews.OrderByDescending(x => x.Rating).ToList();
+                    break;
+            }
+
+            var reviewInfo = new ReviewInfo()
+            {
+                BookId = bookId,
+                TotalReviews = (int)totalReviews,
+                AverageRating = averageRating,
+                UserReview = currentUserReview,
+                CommunityReviews = reviews
+            };
+
+            return reviewInfo;
         }
     }
 }

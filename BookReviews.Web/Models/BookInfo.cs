@@ -9,7 +9,6 @@ namespace BookReviews.Web.Models
     public class BookInfo
     {
         public Book Book { get; set; }
-        public Review UserReview { get; set; }
-        public List<Review> CommunityReviews { get; set; }
+        public ReviewInfo Reviews { get; set; }
     }
 }

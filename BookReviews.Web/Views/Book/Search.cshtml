@@ -39,8 +39,8 @@
                     string description = String.Empty;
                     if (!String.IsNullOrWhiteSpace(result.Description))
                     {
-                        description = result.Description.Length > 200
-                            ? $"{result.Description.Substring(0, 200)}..." : result.Description;
+                        description = result.Description.Length > 300
+                            ? $"{result.Description.Substring(0, 300)}..." : result.Description;
                     }
                 }
                 <div class="book-cover">

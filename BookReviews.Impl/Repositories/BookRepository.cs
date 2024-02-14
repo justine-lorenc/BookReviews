@@ -55,6 +55,13 @@ namespace BookReviews.Impl.Repositories
                     },
                     splitOn: "Id");
 
+                books = books.GroupBy(b => b.Id).Select(g =>
+                {
+                    var book = g.First();
+                    book.Authors = g.Select(b => b.Authors.Single()).ToList();
+                    return book;
+                }).ToList();
+
                 return books.FirstOrDefault();
             }
         }

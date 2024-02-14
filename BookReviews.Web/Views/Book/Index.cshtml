@@ -34,64 +34,31 @@
 
         <div class="core-detail">Published @Model.Book.DatePublished.ToString("MMMM d, yyyy")</div>
 
-        <div>@Model.Book.Description</div>
-    </div>
-</div>
-<br />
-@*TODO: Add a star icon and add/edit/delete icons*@
-<div class="book-reviews">
-    @if (Model.UserReview != null)
-    {
-        @Html.HiddenFor(m => m.UserReview.Id)
-
-        <div class="horizontal-links">
-            <h3>My Review</h3>
-
-            @if (CurrentUser.HasAbility(Role.EditReview))
-            {
-                @Html.ActionLink("Edit", "EditReview", "Review", new { id = Model.UserReview.Id }, null)
-            }
-            @if (CurrentUser.HasAbility(Role.DeleteReview))
-            {
-                <a href="" id="btn-delete-review" data-review-id="@Model.UserReview.Id" data-book-id="@Model.Book.Id">Delete</a>
-            }
-        </div>
-
-        string genreCategory = @Model.UserReview.Genre.IsFiction ? "Fiction" : "Nonfiction";
-
-        <div class="my-review">
-            <div class="core-detail">@Model.UserReview.Rating.ToString("#.0") stars</div>
-            <div class="core-detail">@Model.UserReview.BookFormat format</div>
-            <div class="core-detail">@Model.UserReview.Genre.Name - @genreCategory</div>
-            <div>@Model.UserReview.Notes</div>
-        </div>
-    }
-    else
-    {
-        <div>
-            <h3>My Review</h3>
-
-            @if (CurrentUser.HasAbility(Role.AddReview))
-            {
-                @Html.ActionLink("Write Review", "AddReview", "Review", new { bookId = Model.Book.Id }, null)
-            }
-        </div>
-    }
-
-    <br />
-    <div class="community-reviews">
-        <h3>Community Reviews</h3>
-        @foreach (var review in Model.CommunityReviews)
+        @if (Model.Book.Description.Length <= 500)
         {
-            <div>@review.Rating stars</div>
-            <div>@review.Notes</div>
+            <div>@Model.Book.Description</div>
+        }
+        else
+        {
+            <div id="book-description-short">@Model.Book.Description.Substring(0, 500)...</div>
+
+            <div id="book-description-full">@Model.Book.Description</div>
+
+            <a href="" id="toggle-description" data-state="more">More</a>
         }
     </div>
 </div>
 
-@section Scripts {
-    <script type="text/javascript">
+<div id="book-reviews" class="book-reviews">
+    @Html.Partial("~/Views/Review/_BookReviews.cshtml", Model.Reviews)
+</div>
+
+
+    @section Scripts {
+        <script type="text/javascript">
         $(document).ready(function () {
+            $("#book-description-short").show();
+            $("#book-description-full").hide();
 
             $("#btn-delete-review").on("click", function (event) {
                 event.preventDefault();
@@ -100,7 +67,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("DeleteReview", "Review", new { id = Model.UserReview?.Id ?? 0, bookId = Model.Book?.Id ?? 0 })",
+                    url: "@Url.Action("DeleteReview", "Review", new { id = Model.Reviews.UserReview?.Id ?? 0, bookId = Model.Book?.Id ?? 0 })",
                     data: { id: reviewId, bookId: bookId },
                     dataType: "json",
                     success: function() {
@@ -108,6 +75,39 @@
                     }
                 });
             });
+
+            $("#toggle-description").on("click", function (event) {
+                event.preventDefault();
+                let currentState = $(this).attr("data-state");
+
+                if (currentState === "more") {
+                    $("#book-description-short").hide();
+                    $("#book-description-full").show();
+                    $(this).attr("data-state", "less")
+                    $(this).text("Less");
+                }
+                else {
+                    $("#book-description-short").show();
+                    $("#book-description-full").hide();
+                    $(this).attr("data-state", "more")
+                    $(this).text("More");
+                }
+            })
+
+            $("#book-reviews").on("change", "#review-sort-select", function () {
+                const bookId = $(this).attr("data-book-id");
+                let sortBy = $(this).val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetReviews", "Book", new { id = Model.Book?.Id ?? 0 })",
+                    data: { id: bookId, sortBy: sortBy },
+                    dataType: "html",
+                    success: function (result) {
+                        $("#book-reviews").html(result);
+                    }
+                });
+            });
         });
-    </script>
-}
+        </script>
+    }

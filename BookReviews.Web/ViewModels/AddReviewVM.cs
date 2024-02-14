@@ -12,7 +12,7 @@ namespace BookReviews.Web.ViewModels
     {
         public Book Book { get; set; }
 
-        public int AuthorId { get; set; }
+        public int UserId { get; set; }
 
         [Display(Name = "Star Rating")]
         [Required(ErrorMessage = "Required")]

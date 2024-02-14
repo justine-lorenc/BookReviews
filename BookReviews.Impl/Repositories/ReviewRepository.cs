@@ -50,7 +50,7 @@ namespace BookReviews.Impl.Repositories
 
         public async Task<List<Review>> GetReviews(long bookId)
         {
-            string query = @"SELECT TOP 1 r.[Id], r.[Rating], r.[Notes], r.[DateAdded], r.[DateUpdated], r.[BookFormatId] AS [BookFormat],
+            string query = @"SELECT r.[Id], r.[Rating], r.[Notes], r.[DateAdded], r.[DateUpdated], r.[BookFormatId] AS [BookFormat],
                 u.[Id], u.[FirstName], u.[LastName], 
                 g.[Id], g.[Name], g.[IsFiction]
                 FROM [dbo].[Review] AS r 
