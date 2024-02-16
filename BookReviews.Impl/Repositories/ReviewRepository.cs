@@ -38,7 +38,7 @@ namespace BookReviews.Impl.Repositories
                     map: (review, book, user, genre) =>
                     {
                         review.Book = book;
-                        review.Author = user;
+                        review.User = user;
                         review.Genre = genre;
                         return review;
                     },
@@ -50,7 +50,7 @@ namespace BookReviews.Impl.Repositories
 
         public async Task<List<Review>> GetReviews(long bookId)
         {
-            string query = @"SELECT r.[Id], r.[Rating], r.[Notes], r.[DateAdded], r.[DateUpdated], r.[BookFormatId] AS [BookFormat],
+            string query = @"SELECT r.[Id], r.[Rating], r.[Notes], r.[DateAdded], r.[DateUpdated], r.[BookFormatId] AS [BookFormat], 
                 u.[Id], u.[FirstName], u.[LastName], 
                 g.[Id], g.[Name], g.[IsFiction]
                 FROM [dbo].[Review] AS r 
@@ -68,7 +68,7 @@ namespace BookReviews.Impl.Repositories
                     param: parameters,
                     map: (review, user, genre) =>
                     {
-                        review.Author = user;
+                        review.User = user;
                         review.Genre = genre;
                         return review;
                     },
@@ -78,11 +78,72 @@ namespace BookReviews.Impl.Repositories
             }
         }
 
+        public async Task<List<Review>> GetReviews(int userId, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            string query = @"SELECT r.[Id], r.[Rating], r.[Notes], r.[DateAdded], r.[DateUpdated], r.[BookFormatId] AS [BookFormat], 
+                r.[BookId] as [Id],
+                u.[Id], u.[FirstName], u.[LastName], 
+                g.[Id], g.[Name], g.[IsFiction]
+                FROM [dbo].[Review] AS r 
+                INNER JOIN [dbo].[User] AS u ON r.[UserId] = u.[Id]
+                INNER JOIN [dbo].[Genre] AS g ON r.[GenreId] = g.[Id]
+                WHERE r.[UserId] = @UserId";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@UserId", userId);
+
+            if (startDate.HasValue)
+            {
+                query += " AND r.[DateAdded] >= @StartDate";
+                parameters.Add("@StartDate", startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                query += " AND r.[DateAdded] < @EndDate";
+                parameters.Add("@EndDate", endDate.Value);
+            }
+
+            query += ";";
+
+            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
+            {
+                IEnumerable<Review> reviews = await connection.QueryAsync<Review, Book, User, Genre, Review>(
+                    sql: query,
+                    param: parameters,
+                    map: (review, book, user, genre) =>
+                    {
+                        review.Book = book;
+                        review.User = user;
+                        review.Genre = genre;
+                        return review;
+                    },
+                    splitOn: "Id, Id, Id");
+
+                return reviews.ToList();
+            }
+        }
+
+        public async Task<List<DateTime>> GetReviewDates(int userId)
+        {
+            string query = @"SELECT [DateAdded] FROM [dbo].[Review] WHERE [UserId] = @UserId;";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@UserId", userId);
+
+            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
+            {
+                IEnumerable<DateTime> reviewDates = await connection.QueryAsync<DateTime>(query, parameters);
+
+                return reviewDates.ToList();
+            }
+        }
+
         public async Task<int> InsertReview(Review review)
         {
             string command = @"INSERT INTO [dbo].[Review] ([Rating], [Notes], [DateAdded], [DateUpdated], [BookId], [UserId], [GenreId], [BookFormatId])
-            VALUES (@Rating, @Notes, @DateAdded, @DateUpdated, @BookId, @UserId, @GenreId, @BookFormatId);
-            SELECT SCOPE_IDENTITY();";
+                VALUES (@Rating, @Notes, @DateAdded, @DateUpdated, @BookId, @UserId, @GenreId, @BookFormatId);
+                SELECT SCOPE_IDENTITY();";
 
             var now = DateTime.Now;
 
@@ -92,7 +153,7 @@ namespace BookReviews.Impl.Repositories
             parameters.Add("@DateAdded", now);
             parameters.Add("@DateUpdated", now);
             parameters.Add("@BookId", review.Book.Id);
-            parameters.Add("@UserId", review.Author.Id);
+            parameters.Add("@UserId", review.User.Id);
             parameters.Add("@GenreId", review.Genre.Id);
             parameters.Add("@BookFormatId", (short)review.BookFormat);
 

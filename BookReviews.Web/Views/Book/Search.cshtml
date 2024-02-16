@@ -1,4 +1,5 @@
 ﻿@model SearchVM
+@using BookReviews.Web.Models.Enums;
 @using BookReviews.Web.ViewModels;
 @using BookReviews.Web.Utilities;
 
@@ -44,7 +45,7 @@
                     }
                 }
                 <div class="book-cover">
-                    @Html.Raw(ViewExtensions.GetCoverImage(@result.CoverUrl, false))
+                    @Html.Raw(ViewExtensions.GetCoverImage(@result.CoverUrl, ImageSize.Medium))
                 </div>
                 <div class="book-summary">
                     <div>

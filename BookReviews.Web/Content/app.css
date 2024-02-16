@@ -54,6 +54,33 @@ body {
   margin: 0px auto 0px auto;
 }
 
+.view-section, #user-review-summary, #user-review-stats, .user-review, .book-info, .search-result {
+  background-color: #FEFEFE;
+  border: 1px solid #E0E0E0;
+  border-radius: 2px;
+  padding: 14px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Helvetica, sans-serif;
+  color: #000000;
+}
+
+.input-field, #review-summary-table input, #review-summary-table_filter input[type=search], form:not(.nav-form) textarea, form:not(.nav-form) input[type=number], form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password], select.input-dropdown, .community-reviews .review-sort > select, form:not(.nav-form) select {
+  background-color: #FEFEFE;
+  border: 1px solid #7D7F7C;
+  border-radius: 2px;
+  padding: 4px 6px;
+}
+.input-field:focus, #review-summary-table input:focus, #review-summary-table_filter input[type=search]:focus, form:not(.nav-form) textarea:focus, form:not(.nav-form) input[type=number]:focus, form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus, select.input-dropdown:focus, .community-reviews .review-sort > select:focus, form:not(.nav-form) select:focus {
+  outline: none;
+}
+
+select.input-dropdown option, .community-reviews .review-sort > select option, form:not(.nav-form) select option {
+  background-color: #FEFEFE;
+  padding: 4px 6px;
+}
+
 a.link-bold {
   font-weight: bold;
 }
@@ -77,9 +104,17 @@ a:active {
   margin-right: 10px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: Helvetica, sans-serif;
-  color: #000000;
+button {
+  color: #FEFEFE;
+  background-color: #7BB5E7;
+  border: none;
+  border-radius: 2px;
+  padding: 6px 12px;
+  text-align: center;
+  text-decoration: none;
+}
+button:hover {
+  background-color: #17528A;
 }
 
 form:not(.nav-form) {
@@ -138,34 +173,6 @@ form:not(.nav-form) textarea {
   min-width: 186px;
   min-height: 100px;
 }
-form:not(.nav-form) select option {
-  background-color: #FEFEFE;
-  padding: 4px 6px;
-}
-
-.input-field, .review-sort > select, form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password], form:not(.nav-form) input[type=number], form:not(.nav-form) textarea, form:not(.nav-form) select {
-  background-color: #FEFEFE;
-  border: 1px solid #7D7F7C;
-  border-radius: 2px;
-  padding: 4px 6px;
-}
-.input-field:focus, .review-sort > select:focus, form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus, form:not(.nav-form) input[type=number]:focus, form:not(.nav-form) textarea:focus, form:not(.nav-form) select:focus {
-  outline: none;
-}
-
-button {
-  color: #FEFEFE;
-  background-color: #7BB5E7;
-  border: none;
-  border-radius: 2px;
-  padding: 4px 6px;
-  text-align: center;
-  text-decoration: none;
-}
-button:hover {
-  background-color: #17528A;
-}
-
 .message, .message-warning, .message-error, .message-success {
   border-radius: 2px;
   padding: 8px;
@@ -184,12 +191,44 @@ button:hover {
   border: 1px solid #F7EF5A;
 }
 
-.search-result {
+.right-align {
+  float: right;
+}
+
+.tooltip {
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+}
+.tooltip:hover .tooltip-content {
+  visibility: visible;
+}
+.tooltip .tooltip-content {
+  visibility: hidden;
   background-color: #FEFEFE;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #7D7F7C;
   border-radius: 2px;
+  text-align: center;
+  position: absolute;
+  z-index: 1;
+}
+.tooltip .tooltip-content.tooltip-right {
+  left: 105%;
+}
+.tooltip .tooltip-content.tooltip-left {
+  right: 105%;
+}
+.tooltip .tooltip-content.tooltip-top {
+  bottom: 100%;
+  left: 50%;
+}
+.tooltip .tooltip-content.tooltip-bottom {
+  top: 100%;
+  left: 50%;
+}
+
+.search-result {
   margin-bottom: 12px;
-  padding: 14px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -213,10 +252,6 @@ button:hover {
 }
 
 .book-info {
-  background-color: #FEFEFE;
-  border: 1px solid #E0E0E0;
-  border-radius: 2px;
-  padding: 14px;
   margin: 0px 0px 20px 0px;
   display: flex;
   flex-direction: row;
@@ -240,7 +275,7 @@ button:hover {
   font-weight: bold;
 }
 
-.reviewed-book {
+.reviewed-book-info {
   margin: 0px 0px 14px 0px;
 }
 
@@ -250,10 +285,6 @@ button:hover {
 }
 
 .user-review {
-  background-color: #FEFEFE;
-  border: 1px solid #E0E0E0;
-  border-radius: 2px;
-  padding: 14px;
   margin: 0px 0px 20px 0px;
 }
 .user-review > div {
@@ -268,24 +299,82 @@ button:hover {
 .user-review > div.core-detail {
   font-weight: bold;
 }
-.user-review .right-align {
-  float: right;
-}
 
 .community-reviews {
   margin: 30px 0px 0px 0px;
 }
-
-.review-stats {
+.community-reviews .review-stats {
   margin: 0px 0px 14px 0px;
 }
-
-.review-sort {
+.community-reviews .review-sort {
   margin: 0px 0px 14px 0px;
 }
-.review-sort > select option {
+#user-review-stats {
+  margin: 0px 0px 30px 0px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  column-gap: 60px;
+  row-gap: 20px;
+}
+#user-review-stats .section-title {
+  font-weight: bold;
+  text-decoration: underline;
+}
+#user-review-stats > div > div {
+  margin: 8px 0px;
+}
+#user-review-stats > div > div:first-child {
+  margin-top: 0px;
+}
+#user-review-stats > div > div:last-child {
+  margin-bottom: 0px;
+}
+
+#user-review-summary {
+  margin: 0px 0px 20px 0px;
+}
+
+#review-summary-table {
+  padding: 14px 0px 0px 0px;
+  margin: 0px 0px 14px 0px;
+}
+#review-summary-table_paginate .paginate_button {
+  color: #000000 !important;
   background-color: #FEFEFE;
-  padding: 4px 6px;
+  border: none;
+  border-radius: 2px;
+  padding: 6px 12px;
+  margin: 0px 4px;
+  text-align: center;
+  text-decoration: none;
+}
+#review-summary-table_paginate .paginate_button.current {
+  border: 1px solid #7BB5E7;
+  background-image: none;
+}
+#review-summary-table_paginate .paginate_button.disabled {
+  color: #7D7F7C !important;
+}
+#review-summary-table_paginate .paginate_button:hover:not(.disabled, .current) {
+  background-color: #7BB5E7 !important;
+  background-image: none;
+}
+#review-summary-table_paginate .paginate_button:active {
+  box-shadow: none;
+}
+
+.book-cover-icon {
+  color: #9AC778;
+}
+.book-cover-icon .book-cover {
+  width: 70px;
+  padding: 8px 4px 6px 4px;
+  margin: 0px 10px;
+  top: -50px;
 }
 
 /*# sourceMappingURL=app.css.map */

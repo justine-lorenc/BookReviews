@@ -10,7 +10,7 @@
     
     @Html.Partial("_ResultMessage")
 
-    <div class="reviewed-book">
+    <div class="reviewed-book-info">
         @Html.Raw(ViewExtensions.GetTitleLink(Model.Book.Title, Model.Book.Id)) by
         @Html.Raw(ViewExtensions.GetAuthorLinks(Model.Book.Authors))
     </div>

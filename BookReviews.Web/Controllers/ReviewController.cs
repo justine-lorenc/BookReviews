@@ -30,6 +30,110 @@ namespace BookReviews.Web.Controllers
         }
 
         [HttpGet]
+        [Route("~/user/{id:int}/reviews")]
+        public async Task<ActionResult> UserReviews(int id, int year = 0)
+        {
+            if (id == 0)
+                throw new Exception("Invalid user ID");
+            else if (id != CurrentUser.Id && !CurrentUser.HasAbility(Role.Admin))
+                return RedirectToAction("Forbidden", "Home");
+
+            int currentYear = DateTime.Today.Year;
+
+            // if the year is invalid, set it to the current year (0 equals all reviews)
+            if (year != 0 && (year < 2020 || year > currentYear))
+            {
+                year = currentYear;
+            }
+
+            List<int> reviewYears = await _reviewLogic.GetReviewYears(id);
+            reviewYears = reviewYears.OrderByDescending(x => x).Prepend(0).ToList();
+
+            Dictionary<int, string> reviewYearsSelect = reviewYears.ToDictionary(k => k, v => v.ToString());
+            reviewYearsSelect[0] = "All";
+
+            var model = new UserReviews()
+            {
+                UserId = id,
+                Year = year,
+                Years = reviewYearsSelect
+            };
+
+            // retrieve reviews
+            List<Review> userReviews = await _reviewLogic.GetReviews(id, true, year);
+
+            // calculate stats
+            if (userReviews != null && userReviews.Count > 0)
+            {           
+                // overview
+                int totalBooks = userReviews.Count;
+                int totalPages = userReviews.Sum(x => x.Book.Pages);
+                decimal ratingSum = userReviews.Sum(x => (decimal)x.Rating);
+                decimal averageRating = totalBooks == 0 ? 0 : (ratingSum / (decimal)totalBooks);
+
+                // format stats
+                List<BookFormat> formats = userReviews.GroupBy(x => x.BookFormat)
+                    .Select(g => g.First().BookFormat).ToList();
+
+                var formatsRead = new List<FormatRead>();
+                foreach (var format in formats)
+                {
+                    int formatCount = userReviews.Where(x => x.BookFormat == format).Count();
+                    decimal formatPercent = CalculatePercent((decimal)formatCount, (decimal)totalBooks);
+
+                    var formatRead = new FormatRead()
+                    {
+                        Format = format,
+                        Count = formatCount,
+                        Percent = formatPercent
+                    };
+
+                    formatsRead.Add(formatRead);
+                }
+
+                // genre stats
+                List<Genre> genres = userReviews.GroupBy(x => x.Genre.Id).Select(g => g.First().Genre).ToList();
+
+                int totalFiction = userReviews.Where(x => x.Genre.IsFiction == true).Count();
+                decimal fictionPercent = CalculatePercent((decimal)totalFiction, (decimal)totalBooks);
+
+                int totalNonfiction = userReviews.Where(x => x.Genre.IsFiction == false).Count();
+                decimal nonfictionPercent = CalculatePercent((decimal)totalNonfiction, (decimal)totalBooks);
+
+                var genresRead = new List<GenreRead>();
+                foreach (var genre in genres)
+                {
+                    int genreCount = userReviews.Where(x => x.Genre.Id == genre.Id).Count();
+                    decimal genrePercent = CalculatePercent((decimal)genreCount, (decimal)totalBooks);
+
+                    var genreRead = new GenreRead()
+                    {
+                        Id = genre.Id,
+                        Name = genre.Name,
+                        Count = genreCount,
+                        Percent = genrePercent
+                    };
+
+                    genresRead.Add(genreRead);
+                }
+
+                model.TotalBooks = totalBooks;
+                model.TotalPages = totalPages;
+                model.AverageRating = averageRating;
+                model.FormatsRead = formatsRead.OrderByDescending(x => x.Count).ToList();
+                model.TotalFiction = totalFiction;
+                model.FictionPercent = fictionPercent;
+                model.TotalNonfiction = totalNonfiction;
+                model.NonfictionPercent = nonfictionPercent;
+                model.GenresRead = genresRead.OrderByDescending(x => x.Count).ToList();
+                model.Reviews = userReviews.OrderByDescending(x => x.DateUpdated).ToList();
+            }
+
+            return View(model);
+        }
+        
+
+        [HttpGet]
         [Route("add")]
         [HasAbility(Role.AddReview)]
         public async Task<ActionResult> AddReview(long bookId)
@@ -139,6 +243,17 @@ namespace BookReviews.Web.Controllers
             model.Genres = genres;
 
             return model;
+        }
+
+        private decimal CalculatePercent(decimal dividend, decimal divisor)
+        {
+            if (divisor == 0)
+                return 0.0M;
+
+            decimal result = (dividend / divisor) * 100;
+            result = Math.Round(result, 2);
+
+            return result;
         }
     }
 }

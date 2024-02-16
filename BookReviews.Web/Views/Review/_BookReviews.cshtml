@@ -63,7 +63,7 @@
 
     @foreach (var review in Model.CommunityReviews)
     {
-        string reviewAuthor = $"{review.Author.FirstName} {review.Author.LastName.Substring(0, 1)}.";
+        string reviewAuthor = $"{review.User.FirstName} {review.User.LastName.Substring(0, 1)}.";
 
         <div class="user-review">
             <div class="right-align">@review.DateAdded.ToString("MMMM d, yyyy")</div>

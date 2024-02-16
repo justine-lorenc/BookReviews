@@ -26,12 +26,12 @@ namespace BookReviews.Impl.Logic
             _searchRepository = searchRepository;
         }
 
-        public async Task<Models.Book> GetBook(long id)
+        public async Task<Models.Book> GetBook(long bookId)
         {
             try
             {
                 // check if the book exists in the database first
-                Entities.Book existingBook = await _bookRepository.GetFullBook(id);
+                Entities.Book existingBook = await _bookRepository.GetFullBook(bookId);
 
                 if (existingBook != null)
                 {
@@ -40,13 +40,48 @@ namespace BookReviews.Impl.Logic
                 }
 
                 // if not, search for it with the book API
-                List<Models.Book> searchResults = await SearchBooks(SearchCategory.Isbn, id.ToString());
+                List<Models.Book> searchResults = await SearchBooks(SearchCategory.Isbn, bookId.ToString());
                 return searchResults.FirstOrDefault();
             }
             catch (Exception ex)
             {
                 // log error here
                 return null;
+            }
+        }
+
+        public async Task<List<Models.Book>> GetBooks(List<long> bookIds)
+        {
+            try
+            {
+                // check if the books exist in the database first
+                List<Entities.Book> existingBooks = await _bookRepository.GetFullBooks(bookIds);
+                List<Models.Book> bookResults = _mapper.Map<List<Models.Book>>(existingBooks);
+                List<long> foundBookIds = bookResults.Select(x => x.Id).ToList();
+
+                List<long> missingBookIds = bookIds.Except(foundBookIds).ToList();
+
+                // for any not found, call the book API
+                if (missingBookIds.Any())
+                {
+                    foreach (long missingBookId in missingBookIds)
+                    {
+                        List<Models.Book> searchResults = await SearchBooks(SearchCategory.Isbn, missingBookId.ToString());
+                        Models.Book missingBook = searchResults.FirstOrDefault();
+
+                        if (missingBook == null)
+                            throw new Exception("Failed to retrieve a book");
+
+                        bookResults.Add(missingBook);
+                    }
+                }
+
+                return bookResults;
+            }
+            catch (Exception ex)
+            {
+                // log error here
+                return new List<Models.Book>();
             }
         }
 
@@ -95,8 +130,8 @@ namespace BookReviews.Impl.Logic
                 if (booksInserted == 0)
                     throw new Exception("Failed to insert book");
 
-                // insert authors that don't already exist
-                List<int> authorIds = await AddAuthors(book.Id, book.Authors);
+                // insert any authors that don't already exist
+                List<int> authorIds = await AddAuthors(book.Authors);
 
                 if (authorIds.Count < book.Authors.Count)
                     throw new Exception("Failed to insert authors");
@@ -116,21 +151,24 @@ namespace BookReviews.Impl.Logic
             }
         }
 
-        private async Task<List<int>> AddAuthors(long bookId, List<Models.Author> authors)
+        private async Task<List<int>> AddAuthors(List<Models.Author> authors)
         {
             var authorIds = new List<int>();
+            List<string> authorNames = authors.Select(x => x.Name).ToList();
+            List<Entities.Author> existingAuthors = await _authorRepository.GetAuthors(authorNames);
 
             foreach (var author in authors)
             {
-                Entities.Author authorRecord = await _authorRepository.GetAuthor(author.Name);
+                Entities.Author existingAuthor = existingAuthors.Where(x => 
+                    x.Name.Equals(author.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
-                if (authorRecord != null)
+                if (existingAuthor != null)
                 {
-                    authorIds.Add(authorRecord.Id);
+                    authorIds.Add(existingAuthor.Id);
                     continue;
                 }
 
-                authorRecord = _mapper.Map<Entities.Author>(author);
+                Entities.Author authorRecord = _mapper.Map<Entities.Author>(author);
                 int authorId = await _authorRepository.InsertAuthor(authorRecord);
 
                 if (authorId == 0)

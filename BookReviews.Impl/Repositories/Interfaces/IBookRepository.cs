@@ -11,6 +11,7 @@ namespace BookReviews.Impl.Repositories.Interfaces
     {
         Task<Book> GetBook(long bookId);
         Task<Book> GetFullBook(long bookId);
+        Task<List<Book>> GetFullBooks(List<long> bookIds);
         Task<int> InsertBook(Book book);
     }
 }

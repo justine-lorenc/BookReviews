@@ -60,9 +60,47 @@ namespace BookReviews.Impl.Repositories
                     var book = g.First();
                     book.Authors = g.Select(b => b.Authors.Single()).ToList();
                     return book;
-                }).ToList();
+                });
 
                 return books.FirstOrDefault();
+            }
+        }
+
+        public async Task<List<Book>> GetFullBooks(List<long> bookIds)
+        {
+            string query = @"SELECT b.[Id], b.[Title], b.[SubTitle], b.[Pages], b.[DatePublished], b.[Description], b.[CoverUrl],
+                a.[Id], a.[Name]
+                FROM [dbo].[Book] AS b
+                INNER JOIN [dbo].[BookAuthor] AS ba ON ba.[BookId] = b.[Id]
+                INNER JOIN [dbo].[Author] AS a ON ba.[AuthorId] = a.[Id]
+                WHERE b.[Id] IN @Ids;";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@Ids", bookIds);
+
+            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
+            {
+                IEnumerable<Book> books = await connection.QueryAsync<Book, Author, Book>(
+                    sql: query,
+                    param: parameters,
+                    map: (book, author) =>
+                    {
+                        if (book.Authors == null)
+                            book.Authors = new List<Author>();
+
+                        book.Authors.Add(author);
+                        return book;
+                    },
+                    splitOn: "Id");
+
+                books = books.GroupBy(b => b.Id).Select(g =>
+                {
+                    var book = g.First();
+                    book.Authors = g.Select(b => b.Authors.FirstOrDefault()).ToList();
+                    return book;
+                });
+
+                return books.ToList();
             }
         }
 

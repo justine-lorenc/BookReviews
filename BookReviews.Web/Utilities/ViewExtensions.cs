@@ -46,12 +46,28 @@ namespace BookReviews.Web.Utilities
             return authorLinks;
         }
 
-        public static string GetCoverImage(string coverUrl, bool fullSize = true)
+        public static string GetCoverImage(string coverUrl, ImageSize imageSize = ImageSize.Small)
         {
             string coverImage = String.Empty;
             string imageUrl = String.Empty;
-            int imageWidth = fullSize ? 145 : 105;
-            int imageHeight = fullSize ? 200 : 160;
+            int imageWidth = 60;
+            int imageHeight = 120;
+
+            switch (imageSize)
+            {
+                case ImageSize.Small:
+                    imageWidth = 60;
+                    imageHeight = 96;
+                    break;
+                case ImageSize.Medium:
+                    imageWidth = 100;
+                    imageHeight = 160;
+                    break;
+                case ImageSize.Large:
+                    imageWidth = 125;
+                    imageHeight = 200;
+                    break;
+            }
 
             if (String.IsNullOrWhiteSpace(coverUrl))
                 imageUrl = "/Content/Images/GenericCover.png";
@@ -61,6 +77,17 @@ namespace BookReviews.Web.Utilities
             coverImage = $"<img src=\"{imageUrl}\" width=\"{imageWidth}\" height=\"{imageHeight}\" alt=\"Book cover\" />";
 
             return coverImage;
+        }
+
+        public static string TruncateDescription(string description, int maxLength)
+        {
+            if (!String.IsNullOrWhiteSpace(description))
+            {
+                description = description.Length > maxLength
+                    ? $"{description.Substring(0, maxLength)}..." : description;
+            }
+
+            return description;
         }
 
         public static Dictionary<int, string> GetSortByDropDown()

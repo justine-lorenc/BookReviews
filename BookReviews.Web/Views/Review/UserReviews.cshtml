@@ -1,0 +1,148 @@
+﻿@model BookReviews.Web.Models.UserReviews
+@using BookReviews.Web.Utilities;
+@using BookReviews.Web.Models.Enums;
+
+@{
+    ViewBag.Title = "My Reviews";
+}
+
+<div>
+    @Html.Partial("_ResultMessage")
+
+    <div id="user-review-year" class="right-align">
+        Year @Html.DropDownListFor(m => m.Year, new SelectList(Model.Years, "Key", "Value", Model.Year),
+            null, new { @id = "review-year-select", @class = "input-dropdown", data_user_id = Model.UserId })
+    </div>
+    <br/>
+
+    <h3>Statistics</h3>
+
+    <div id="user-review-stats">
+        <div>
+            <div class="section-title">Overview</div>
+
+            <div>@Model.TotalBooks books read</div>
+
+            <div>@Model.TotalPages.ToString("##,###") total pages</div>
+
+            <div>@Model.AverageRating.ToString("0.00") average rating</div>
+
+            <div>@Model.TotalFiction fiction (@Model.FictionPercent.ToString("#0.00")%)</div>
+
+            <div>@Model.TotalNonfiction nonfiction (@Model.NonfictionPercent.ToString("#0.00")%)</div>
+        </div>
+
+        @{
+            int genreCount = Model.GenresRead.Count;
+            int genreHalf = genreCount;
+
+            if (genreCount >= 5)
+            {
+                genreHalf = genreCount / 2;
+
+                if ((Model.GenresRead.Count % 2) > 0)
+                {
+                    genreHalf += 1;
+                }
+            }
+        }
+        <div>
+            <div class="section-title">Genres</div>
+
+            @foreach (var genre in Model.GenresRead.Take(genreHalf))
+            {
+                <div>@genre.Count @genre.Name.ToLower() (@genre.Percent.ToString("#0.00")%)</div>
+            }
+        </div>
+        @if (Model.GenresRead.Count > genreHalf)
+        {
+            <div>
+                <div>&nbsp;</div>
+
+                @foreach (var genre in Model.GenresRead.Skip(genreHalf))
+                {
+                    <div>@genre.Count @genre.Name.ToLower() (@genre.Percent.ToString("#0.00")%)</div>
+                }
+            </div>
+        }
+
+        <div>
+            <div class="section-title">Format</div>
+            @foreach (var format in Model.FormatsRead)
+            {
+                <div>@format.Count @format.Format.ToString().ToLower() (@format.Percent.ToString("#0.00")%)</div>
+            }
+        </div>
+    </div>
+
+    <h3>Summary</h3>
+
+    <div id="user-review-summary">
+        <table id="review-summary-table" class="row-border">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Authors</th>
+                    <th>Pages</th>
+                    <th>Format</th>
+                    <th>Genre</th>
+                    <th>Rating</th>
+                    <th>Reviewed</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var review in Model.Reviews)
+                {
+                    <tr>
+                        <td>
+                            <span class="tooltip book-cover-icon">
+                                <i class="fa-solid fa-book"></i>
+                                <span class="tooltip-content tooltip-left book-cover">@Html.Raw(ViewExtensions.GetCoverImage(review.Book.CoverUrl, ImageSize.Small))</span>
+                            </span>
+                        </td>
+                        <td>
+                            @Html.Raw(ViewExtensions.GetTitleLink(review.Book.Title, review.Book.Id))
+                        </td>
+                        <td>@Html.Raw(ViewExtensions.GetAuthorLinks(review.Book.Authors, 1))</td>
+                        <td>@review.Book.Pages</td>
+                        <td>@review.BookFormat</td>
+                        <td>@review.Genre.Name</td>
+                        <td>@review.Rating.ToString("0.0")</td>
+                        <td>@review.DateAdded.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let table = new DataTable("#review-summary-table", {
+                scrollx: true,
+                scrolly: false,
+                paging: true,
+                ordering: true,
+                orderMulti: false,
+                searching: true,
+                lengthChange: false,
+                order: [[7, "desc"]],
+                pageLength: 25,
+                columnDefs: [
+                    { orderable: false, targets: 0 },
+                    { type: "date", targets: 7 } // needed for the datetime field to be sorted correctly
+                ]
+            });
+
+            $("#review-year-select").on("change", function () {
+                const userId = $(this).attr("data-user-id");
+                let year = $(this).val();
+
+                let url = "/user/" + userId + "/reviews?year=" + year;
+                window.location.href = url;
+            });
+        });
+    </script>
+}

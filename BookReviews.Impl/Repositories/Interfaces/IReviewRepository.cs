@@ -11,6 +11,8 @@ namespace BookReviews.Impl.Repositories.Interfaces
     {
         Task<Review> GetReview(int reviewId);
         Task<List<Review>> GetReviews(long bookId);
+        Task<List<Review>> GetReviews(int userId, DateTime? startDate = null, DateTime? endDate = null);
+        Task<List<DateTime>> GetReviewDates(int userId);
         Task<int> InsertReview(Review review);
         Task<int> UpdateReview(Review review);
         Task<int> DeleteReview(int reviewId);

@@ -97,13 +97,13 @@ namespace BookReviews.Web.Controllers
             List<Review> reviews = await _reviewLogic.GetReviews(bookId);
 
             // calculate stats
-            decimal totalReviews = (decimal)reviews.Count;
+            int totalReviews = reviews.Count;
             decimal ratingSum = reviews.Select(x => (decimal)x.Rating).Sum();
-            decimal averageRating = totalReviews == 0 ? 0 : (ratingSum / totalReviews);
+            decimal averageRating = totalReviews == 0 ? 0 : (ratingSum / (decimal)totalReviews);
             averageRating = Math.Round(averageRating, 2);
 
             // find current user's review
-            Review currentUserReview = reviews.Where(x => x.Author.Id == CurrentUser.Id).FirstOrDefault();
+            Review currentUserReview = reviews.Where(x => x.User.Id == CurrentUser.Id).FirstOrDefault();
 
             if (currentUserReview != null)
                 reviews.Remove(currentUserReview);
@@ -128,7 +128,7 @@ namespace BookReviews.Web.Controllers
             var reviewInfo = new ReviewInfo()
             {
                 BookId = bookId,
-                TotalReviews = (int)totalReviews,
+                TotalReviews = totalReviews,
                 AverageRating = averageRating,
                 UserReview = currentUserReview,
                 CommunityReviews = reviews

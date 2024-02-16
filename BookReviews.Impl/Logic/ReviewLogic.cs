@@ -59,7 +59,64 @@ namespace BookReviews.Impl.Logic
             catch (Exception ex)
             {
                 // log error here
-                return null;
+                return new List<Models.Review>();
+            }
+        }
+
+        public async Task<List<Models.Review>> GetReviews(int userId, bool includeBooks = true, int year = 0)
+        {
+            try
+            {
+                DateTime? startDate = null;
+                DateTime? endDate = null;
+
+                if (year > 0)
+                {
+                    startDate = new DateTime(year, 1, 1);
+                    endDate = startDate.Value.AddYears(1);
+                }
+
+                List<Entities.Review> reviewRecords = await _reviewRepository.GetReviews(userId, startDate, endDate);
+                List<Models.Review> reviewResults = _mapper.Map<List<Models.Review>>(reviewRecords);
+
+                if (includeBooks)
+                {
+                    List<long> bookIds = reviewResults.Select(x => x.Book.Id).ToList();
+                    List<Models.Book> bookResults = await _bookLogic.GetBooks(bookIds);
+
+                    foreach (var reviewResult in reviewResults)
+                    {
+                        Models.Book bookResult = bookResults.Where(x => x.Id == reviewResult.Book.Id).FirstOrDefault();
+
+                        if (bookResult == null)
+                            throw new Exception("Failed to retrieve review's book");
+
+                        reviewResult.Book = bookResult;
+                    }
+                }
+
+                return reviewResults;
+            }
+            catch (Exception ex)
+            {
+                // log error here
+                return new List<Models.Review>();
+            }
+        }
+
+        public async Task<List<int>> GetReviewYears(int userId)
+        {
+            try
+            {
+                List<DateTime> reviewDateRecords = await _reviewRepository.GetReviewDates(userId);
+                List<int> reviewYears = reviewDateRecords.Select(x => x.Year).Distinct().ToList();
+
+                return reviewYears;
+            }
+            catch (Exception ex)
+            {
+                // log error here
+                return new List<int>();
             }
         }
 

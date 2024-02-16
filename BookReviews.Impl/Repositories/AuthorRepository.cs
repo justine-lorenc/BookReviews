@@ -13,43 +13,12 @@ namespace BookReviews.Impl.Repositories
 {
     public class AuthorRepository : IAuthorRepository
     {
-        public async Task<Author> GetAuthor(string name)
-        {
-            string query = @"SELECT TOP 1 [Id], [Name] FROM [dbo].[Author] WHERE [Name] = @Name;";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@Name", name);
-
-            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
-            {
-                Author author = await connection.QuerySingleOrDefaultAsync<Author>(query, parameters);
-                return author;
-            }
-        }
-
         public async Task<List<Author>> GetAuthors(List<string> names)
         {
-            string query = @"SELECT  [Id], [Name] FROM [dbo].[Author] WHERE [Name] IN (@Names);";
+            string query = @"SELECT [Id], [Name] FROM [dbo].[Author] WHERE [Name] IN @Names;";
 
             var parameters = new DynamicParameters();
             parameters.Add("@Names", names);
-
-            using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
-            {
-                IEnumerable<Author> authors = await connection.QueryAsync<Author>(query, parameters);
-                return authors.ToList();
-            }
-        }
-
-        public async Task<List<Author>> GetAuthors(long bookId)
-        {
-            string query = @"SELECT a.[Id], a.[Name]
-                FROM [dbo].[Author] AS a
-                INNER JOIN [dbo].[BookAuthor] AS ba ON a.[Id] = ba.[AuthorId]
-                WHERE ba.[BookId] = @BookId;";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@BookId", bookId);
 
             using (var connection = new SqlConnection(Globals.ConnectionStrings.BookReviewsDB))
             {

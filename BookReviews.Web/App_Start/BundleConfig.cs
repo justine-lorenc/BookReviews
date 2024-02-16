@@ -14,6 +14,9 @@ namespace BookReviews.Web
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+                        "~/Scripts/jquery.dataTables.min.js"));
+
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -21,6 +24,12 @@ namespace BookReviews.Web
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/app.css"));
+
+            bundles.Add(new StyleBundle("~/Content/css/datatables").Include(
+                    "~/Content/dataTables.min.css"));
+
+            bundles.Add(new StyleBundle("~/Content/css/fontawesome").Include(
+                    "~/Content/fontawesome/css/all.min.css", new CssRewriteUrlTransform()));
         }
     }
 }

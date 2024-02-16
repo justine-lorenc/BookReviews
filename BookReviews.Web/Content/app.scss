@@ -1,17 +1,17 @@
-﻿$color-1: #17528A;
-$color-2: #7BB5E7;
-$color-3: #9AC778;
+﻿$color-1: #17528A;  // dark blue
+$color-2: #7BB5E7;  // light blue
+$color-3: #9AC778;  // light green
 
-$neutral-1: #FFFFFF;
-$neutral-2: #000000;
-$neutral-3: #FEFEFE;
-$neutral-4: #E0E0E0;
-$neutral-5: #7D7F7C;
+$neutral-1: #FFFFFF;    // white
+$neutral-2: #000000;    // black
+$neutral-3: #FEFEFE;    // off-white
+$neutral-4: #E0E0E0;    // light gray
+$neutral-5: #7D7F7C;    // dark gray 
 
-$color-success: #99D393;
-$color-warning: #F7EF5A;
-$color-error: #DF8484;
-$color-error-text: #AF0000;
+$color-success: #99D393;    // pastel green
+$color-warning: #F7EF5A;    // pastel yellow
+$color-error: #DF8484;      // pastel red
+$color-error-text: #AF0000; // dark red
 
 $font-stack: Helvetica, sans-serif;
 $font-color: $neutral-2;
@@ -81,6 +81,38 @@ body {
     margin: 0px auto 0px auto;
 }
 
+.view-section {
+    background-color: $neutral-3;
+    border: 1px solid $neutral-4;
+    border-radius: 2px;
+    padding: 14px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-stack;
+    color: $font-color;
+}
+
+.input-field {
+    background-color: $neutral-3;
+    border: 1px solid $neutral-5;
+    border-radius: 2px;
+    padding: 4px 6px;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+select.input-dropdown {
+    @extend .input-field;
+
+    option {
+        background-color: $neutral-3;
+        padding: 4px 6px;
+    }
+}
+
 a {
     &.link-bold {
         font-weight: bold;
@@ -104,14 +136,24 @@ a {
         color: $color-2;
     }
 }
+
 .horizontal-links > a, .horizontal-links > h3 {
     display: inline-block;
     margin-right: 10px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: $font-stack;
-    color: $font-color;
+button {
+    color: $neutral-3;
+    background-color: $color-2;
+    border: none;
+    border-radius: 2px;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+
+    &:hover {
+        background-color: $color-1;
+    }
 }
 
 form:not(.nav-form) {
@@ -183,37 +225,7 @@ form:not(.nav-form) {
     }
 
     select {
-        @extend .input-field;
-
-        option {
-            background-color: $neutral-3;
-            padding: 4px 6px;
-        }
-    }
-}
-
-.input-field {
-    background-color: $neutral-3;
-    border: 1px solid $neutral-5;
-    border-radius: 2px;
-    padding: 4px 6px;
-
-    &:focus {
-        outline: none;
-    }
-}
-
-button {
-    color: $neutral-3;
-    background-color: $color-2;
-    border: none;
-    border-radius: 2px;
-    padding: 4px 6px;
-    text-align: center;
-    text-decoration: none;
-
-    &:hover {
-        background-color: $color-1;
+        @extend .input-dropdown;
     }
 }
 
@@ -241,12 +253,57 @@ button {
     }
 }
 
+.right-align {
+    float: right;
+}
+
+.tooltip {
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    // set color and other formatting on target element
+
+    &:hover .tooltip-content {
+        visibility: visible;
+    }
+
+    .tooltip-content {
+        visibility: hidden;
+        background-color: $neutral-3;
+        border: 1px solid $neutral-5;
+        border-radius: 2px;
+        text-align: center;
+        position: absolute;
+        z-index: 1;
+        // set width, padding and margin on target element
+
+        &.tooltip-right {
+            // set top px on target element to center content
+            left: 105%;
+        }
+
+        &.tooltip-left {
+            // set top px on target element to center content
+            right: 105%;
+        }
+
+        &.tooltip-top {
+            //margin-left should be half of width to center on target element
+            bottom: 100%;
+            left: 50%;
+        }
+
+        &.tooltip-bottom {
+            //margin-left should be half of width to center on target element
+            top: 100%;
+            left: 50%;
+        }
+    }
+}
+
 .search-result {
-    background-color: $neutral-3;
-    border: 1px solid $neutral-4;
-    border-radius: 2px;
+    @extend .view-section;
     margin-bottom: 12px;
-    padding: 14px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -274,10 +331,7 @@ button {
 }
 
 .book-info {
-    background-color: $neutral-3;
-    border: 1px solid $neutral-4;
-    border-radius: 2px;
-    padding: 14px;
+    @extend .view-section;
     margin: 0px 0px 20px 0px;
     display: flex;
     flex-direction: row;
@@ -305,7 +359,7 @@ button {
     }
 }
 
-.reviewed-book {
+.reviewed-book-info {
     margin: 0px 0px 14px 0px;
 }
 
@@ -315,10 +369,7 @@ button {
 }
 
 .user-review {
-    background-color: $neutral-3;
-    border: 1px solid $neutral-4;
-    border-radius: 2px;
-    padding: 14px;
+    @extend .view-section;
     margin: 0px 0px 20px 0px;
 
     & > div {
@@ -336,29 +387,112 @@ button {
             font-weight: bold;
         }
     }
-
-    .right-align {
-        float: right;
-    }
 }
 
 .community-reviews {
     margin: 30px 0px 0px 0px;
-}
 
-.review-stats {
-    margin: 0px 0px 14px 0px;
-}
+    .review-stats {
+        margin: 0px 0px 14px 0px;
+    }
 
-.review-sort {
-    margin: 0px 0px 14px 0px;
+    .review-sort {
+        margin: 0px 0px 14px 0px;
 
-    & > select {
-        @extend .input-field;
-
-        option {
-            background-color: $neutral-3;
-            padding: 4px 6px;
+        & > select {
+            @extend .input-dropdown;
         }
+    }
+}
+
+#user-review-stats {
+    @extend .view-section;
+    margin: 0px 0px 30px 0px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    column-gap: 60px;
+    row-gap: 20px;
+
+    .section-title {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    & > div > div {
+        margin: 8px 0px;
+
+        &:first-child {
+            margin-top: 0px;
+        }
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+    }
+}
+
+#user-review-summary {
+    @extend .view-section;
+    margin: 0px 0px 20px 0px;
+}
+
+#review-summary-table_filter {
+    input[type=search] {
+        @extend .input-field;
+    }
+}
+
+#review-summary-table {
+    padding: 14px 0px 0px 0px;
+    margin: 0px 0px 14px 0px;
+
+    input {
+        @extend .input-field;
+    }
+}
+
+#review-summary-table_paginate {
+    .paginate_button {
+        color: $neutral-2 !important;
+        background-color: $neutral-3;
+        border: none;
+        border-radius: 2px;
+        padding: 6px 12px;
+        margin: 0px 4px;
+        text-align: center;
+        text-decoration: none;
+
+        &.current {
+            border: 1px solid $color-2;
+            background-image: none;
+        }
+
+        &.disabled {
+            color: $neutral-5 !important;
+        }
+
+        &:hover:not(.disabled, .current) {
+            background-color: $color-2 !important;
+            background-image: none;
+        }
+
+        &:active {
+            box-shadow: none;
+        }
+    }
+}
+
+.book-cover-icon {
+    color: $color-3;
+
+    .book-cover {
+        width: 70px;
+        padding: 8px 4px 6px 4px;
+        margin: 0px 10px;
+        top: -50px;
     }
 }

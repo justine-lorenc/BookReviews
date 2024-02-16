@@ -9,9 +9,7 @@ namespace BookReviews.Impl.Repositories.Interfaces
 {
     public interface IAuthorRepository
     {
-        Task<Author> GetAuthor(string name);
         Task<List<Author>> GetAuthors(List<string> names);
-        Task<List<Author>> GetAuthors(long bookId);
         Task<int> InsertAuthor(Author author);
         Task<int> InsertBookAuthors(long bookId, List<int> authorIds);
     }

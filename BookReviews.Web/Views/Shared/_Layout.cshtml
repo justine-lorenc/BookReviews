@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/css/datatables")
+    @Styles.Render("~/Content/css/fontawesome")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -16,8 +18,10 @@
 
             @if (CurrentUser.IsLoggedIn())
             {
-                @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-item nav-link" })
-                @Html.ActionLink("Search", "Search", "Book", null, new { @class = "nav-item nav-link" })
+                @Html.ActionLink("My Reviews", "UserReviews", "Review", new { id = CurrentUser.Id, year = DateTime.Today.Year }, 
+                    new { @class = "nav-item nav-link" })
+
+                @Html.ActionLink("Search Books", "Search", "Book", null, new { @class = "nav-item nav-link" })
 
                 using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { @class = "nav-item nav-form" }))
                 {
@@ -36,6 +40,7 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/datatables")
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -58,10 +58,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BookInfo.cs" />
+    <Compile Include="Models\Enums\ImageSize.cs" />
+    <Compile Include="Models\FormatRead.cs" />
+    <Compile Include="Models\GenreRead.cs" />
     <Compile Include="Models\ReviewInfo.cs" />
     <Compile Include="Models\CurrentUser.cs" />
     <Compile Include="Models\Enums\MessageType.cs" />
     <Compile Include="Models\Enums\SortBy.cs" />
+    <Compile Include="Models\UserReviews.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\EnumExtensions.cs" />
@@ -74,6 +78,26 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\app.css" />
+    <Content Include="Content\dataTables.css" />
+    <Content Include="Content\dataTables.min.css" />
+    <Content Include="Content\fontawesome\css\all.css" />
+    <Content Include="Content\fontawesome\css\all.min.css" />
+    <Content Include="Content\fontawesome\css\brands.css" />
+    <Content Include="Content\fontawesome\css\brands.min.css" />
+    <Content Include="Content\fontawesome\css\fontawesome.css" />
+    <Content Include="Content\fontawesome\css\fontawesome.min.css" />
+    <Content Include="Content\fontawesome\css\regular.css" />
+    <Content Include="Content\fontawesome\css\regular.min.css" />
+    <Content Include="Content\fontawesome\css\solid.css" />
+    <Content Include="Content\fontawesome\css\solid.min.css" />
+    <Content Include="Content\fontawesome\css\svg-with-js.css" />
+    <Content Include="Content\fontawesome\css\svg-with-js.min.css" />
+    <Content Include="Content\fontawesome\css\v4-font-face.css" />
+    <Content Include="Content\fontawesome\css\v4-font-face.min.css" />
+    <Content Include="Content\fontawesome\css\v4-shims.css" />
+    <Content Include="Content\fontawesome\css\v4-shims.min.css" />
+    <Content Include="Content\fontawesome\css\v5-font-face.css" />
+    <Content Include="Content\fontawesome\css\v5-font-face.min.css" />
     <Content Include="Content\Images\BookReviewsLogo.png" />
     <Content Include="Content\Images\GenericCover.png" />
     <Content Include="Content\Images\GoldStar.png" />
@@ -81,12 +105,22 @@
     <Content Include="Global.asax" />
     <Content Include="Content\app.scss" />
     <Content Include="Content\app.css.map" />
+    <Content Include="Content\fontawesome\webfonts\fa-brands-400.ttf" />
+    <Content Include="Content\fontawesome\webfonts\fa-brands-400.woff2" />
+    <Content Include="Content\fontawesome\webfonts\fa-regular-400.ttf" />
+    <Content Include="Content\fontawesome\webfonts\fa-regular-400.woff2" />
+    <Content Include="Content\fontawesome\webfonts\fa-solid-900.ttf" />
+    <Content Include="Content\fontawesome\webfonts\fa-solid-900.woff2" />
+    <Content Include="Content\fontawesome\webfonts\fa-v4compatibility.ttf" />
+    <Content Include="Content\fontawesome\webfonts\fa-v4compatibility.woff2" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
     <Content Include="Scripts\jquery-3.7.1.slim.js" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.dataTables.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -114,6 +148,7 @@
     <Content Include="Views\Review\EditReview.cshtml" />
     <Content Include="Views\Review\_ReviewFields.cshtml" />
     <Content Include="Views\Review\_BookReviews.cshtml" />
+    <Content Include="Views\Review\UserReviews.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

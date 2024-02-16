@@ -1,6 +1,7 @@
 ﻿@model BookReviews.Web.Models.BookInfo
 @using BookReviews.Impl.Models.Enums;
 @using BookReviews.Web.Models;
+@using BookReviews.Web.Models.Enums;
 @using BookReviews.Web.Utilities;
 
 @{
@@ -17,7 +18,7 @@
     }
 
     <div class="book-cover">
-        @Html.Raw(ViewExtensions.GetCoverImage(Model.Book.CoverUrl))
+        @Html.Raw(ViewExtensions.GetCoverImage(Model.Book.CoverUrl, ImageSize.Large))
     </div>
 
     <div class="book-details">
