@@ -10,14 +10,8 @@
 
 @Html.Partial("_ResultMessage")
 
-@Html.HiddenFor(m => m.Book.Id)
-
-<div class="book-info">
-    @{
-        string authors = ViewExtensions.GetAuthorLinks(Model.Book.Authors);
-    }
-
-    <div class="book-cover">
+<div id="book-info">
+    <div>
         @Html.Raw(ViewExtensions.GetCoverImage(Model.Book.CoverUrl, ImageSize.Large))
     </div>
 
@@ -29,23 +23,26 @@
             <div>@Model.Book.SubTitle</div>
         }
 
-        <div class="core-detail">By @Html.Raw(authors)</div>
+        <div class="core-detail">By @Html.Raw(ViewExtensions.GetAuthorLinks(Model.Book.Authors))</div>
 
-        <div class="core-detail">@Model.Book.Pages pages</div>
+        <div class="core-detail">@Model.Book.Pages.ToString("#,###") pages</div>
 
         <div class="core-detail">Published @Model.Book.DatePublished.ToString("MMMM d, yyyy")</div>
 
-        @if (Model.Book.Description.Length <= 500)
+        @if (!String.IsNullOrWhiteSpace(Model.Book.Description) && Model.Book.Description.Length > 0)
         {
-            <div>@Model.Book.Description</div>
-        }
-        else
-        {
-            <div id="book-description-short">@Model.Book.Description.Substring(0, 500)...</div>
+            if (Model.Book.Description.Length <= 500)
+            {
+                <div>@Model.Book.Description</div>
+            }
+            else
+            {
+                <div id="book-description-short">@ViewExtensions.TruncateDescription(Model.Book.Description, 500)</div>
 
-            <div id="book-description-full">@Model.Book.Description</div>
+                <div id="book-description-full">@Model.Book.Description</div>
 
-            <a href="" id="toggle-description" data-state="more">More</a>
+                <a href="" id="toggle-description" data-state="more">More</a>
+            }
         }
     </div>
 </div>
@@ -66,10 +63,11 @@
                 const reviewId = $(this).attr("data-review-id");
                 const bookId = $(this).attr("data-book-id");
 
+                let url = "/reviews/" + reviewId + "/delete?bookId=" + bookId;
+
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("DeleteReview", "Review", new { id = Model.Reviews.UserReview?.Id ?? 0, bookId = Model.Book?.Id ?? 0 })",
-                    data: { id: reviewId, bookId: bookId },
+                    url: url,
                     dataType: "json",
                     success: function() {
                         location.reload();
@@ -99,10 +97,11 @@
                 const bookId = $(this).attr("data-book-id");
                 let sortBy = $(this).val();
 
+                let url = "/books/" + bookId + "/reviews?sortBy=" + sortBy;
+
                 $.ajax({
                     type: "GET",
-                    url: "@Url.Action("GetReviews", "Book", new { id = Model.Book?.Id ?? 0 })",
-                    data: { id: bookId, sortBy: sortBy },
+                    url: url,
                     dataType: "html",
                     success: function (result) {
                         $("#book-reviews").html(result);

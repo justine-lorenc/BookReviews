@@ -10,10 +10,9 @@
     @Html.Partial("_ResultMessage")
 
     <div id="user-review-year" class="right-align">
-        Year @Html.DropDownListFor(m => m.Year, new SelectList(Model.Years, "Key", "Value", Model.Year),
+        Year: @Html.DropDownListFor(m => m.Year, new SelectList(Model.Years, "Key", "Value", Model.Year),
             null, new { @id = "review-year-select", @class = "input-dropdown", data_user_id = Model.UserId })
     </div>
-    <br/>
 
     <h3>Statistics</h3>
 
@@ -32,11 +31,19 @@
             <div>@Model.TotalNonfiction nonfiction (@Model.NonfictionPercent.ToString("#0.00")%)</div>
         </div>
 
+        <div>
+            <div class="section-title">Format</div>
+            @foreach (var format in Model.FormatsRead)
+            {
+                <div>@format.Count @format.Format.ToString().ToLower() (@format.Percent.ToString("#0.00")%)</div>
+            }
+        </div>
+
         @{
             int genreCount = Model.GenresRead.Count;
             int genreHalf = genreCount;
 
-            if (genreCount >= 5)
+            if (genreCount > 5)
             {
                 genreHalf = genreCount / 2;
 
@@ -61,19 +68,11 @@
 
                 @foreach (var genre in Model.GenresRead.Skip(genreHalf))
                 {
-                    <div>@genre.Count @genre.Name.ToLower() (@genre.Percent.ToString("#0.00")%)</div>
+                <div>@genre.Count @genre.Name.ToLower() (@genre.Percent.ToString("#0.00")%)</div>
                 }
             </div>
         }
-
-        <div>
-            <div class="section-title">Format</div>
-            @foreach (var format in Model.FormatsRead)
-            {
-                <div>@format.Count @format.Format.ToString().ToLower() (@format.Percent.ToString("#0.00")%)</div>
-            }
         </div>
-    </div>
 
     <h3>Summary</h3>
 

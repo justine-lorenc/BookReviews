@@ -12,7 +12,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="page">
+    <div id="page">
         <nav id="nav-bar">
             <img class="nav-item nav-logo" src="~/Content/Images/BookReviewsLogo.png" width="200" height="40" alt="Logo" />
 
@@ -23,7 +23,7 @@
 
                 @Html.ActionLink("Search Books", "Search", "Book", null, new { @class = "nav-item nav-link" })
 
-                using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { @class = "nav-item nav-form" }))
+                using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { @class = "nav-item-right nav-form" }))
                 {
                     @Html.AntiForgeryToken()
                     <button type="submit" value="Submit" class="nav-link">Log Out</button>
@@ -31,13 +31,14 @@
             }
             else
             {
-                @Html.ActionLink("Log In", "Login", "Account", null, new { @class = "nav-item nav-link" })
+                @Html.ActionLink("Log In", "Login", "Account", null, new { @class = "nav-item-right nav-link" })
             }
         </nav>
-        <div class="content">
+        <div id="content">
             @RenderBody()
         </div>
     </div>
+    <footer>&copy; @DateTime.Today.Year Justine Lorenc</footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/datatables")

@@ -18,12 +18,19 @@ $font-color: $neutral-2;
 
 nav {
     margin: 0px;
-    padding: 0px 2px 0px 2px;
+    padding: 0px 14px 0px 6px;
     background-color: $color-1;
 
     .nav-item {
         display: inline-block;
         vertical-align: middle;
+
+        // needed so that on smaller screens this will wrap around correctly
+        @media screen and (min-width: 520px) {
+            &-right {
+                float: right;
+            }
+        }
     }
 
     .nav-logo {
@@ -66,19 +73,40 @@ nav {
     }
 }
 
+html {
+    height: 100%;
+    margin: 0px;
+}
+
 body {
     font-family: $font-stack;
     font-size: 14px;
     color: $font-color;
     background-color: $neutral-3;
+    height: 100%;
     margin: 0px;
     padding: 0px;
 }
 
-.content {
+#page {
+    min-height: 100%;
+    margin: 0px 0px 40px 0px;
+}
+
+#content {
     max-width: 880px;
-    padding: 20px 20px 20px 20px;
+    padding: 20px 20px 24px 20px;
     margin: 0px auto 0px auto;
+}
+
+footer {
+    color: $neutral-3;
+    background-color: $color-1;
+    height: 24px;
+    margin: -24px 0px 0px 0px;
+    padding: 8px 0px 0px 0px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .view-section {
@@ -137,9 +165,13 @@ a {
     }
 }
 
-.horizontal-links > a, .horizontal-links > h3 {
+.horizontal-links > a {
     display: inline-block;
-    margin-right: 10px;
+    margin: 0px 14px 0px 0px;
+
+    &:last-child {
+        margin: 0px 0px 0px 0px;
+    }
 }
 
 button {
@@ -170,11 +202,33 @@ form:not(.nav-form) {
         align-items: center;
         align-content: center;
         column-gap: 14px;
-        min-width: 50%;
-        max-width: 50%;
+        padding: 20px;
+        width: 60%;
 
-        select {
-            min-width: 100px;
+        // wrap around to a single column on smaller screens
+        @media screen and (max-width: 600px) {
+            width: 50%;
+
+            [class^="col-"] {
+                margin: 0px 0px 20px 0px;
+                width: 92%;
+                text-align: center;
+
+                &:last-child {
+                    margin: 0px;
+                }
+            }
+        }
+
+        .form-field {
+            width: 100%;
+        }
+
+        // other input types tend to be slightly narrower (like dropdowns)
+        textarea, input {
+            &.form-field {
+                width: 94%;
+            }
         }
     }
 
@@ -186,11 +240,22 @@ form:not(.nav-form) {
         align-items: center;
         align-content: center;
         row-gap: 14px;
-        min-width: 20%;
-        max-width: 30%;
+        padding: 20px;
+        width: 30%;
 
-        select {
-            min-width: 200px;
+        @media screen and (max-width: 600px) {
+            width: 50%;
+        }
+
+        .form-field {
+            width: 100%;
+        }
+
+        // other input types tend to be slightly narrower (like dropdowns)
+        textarea, input {
+            &.form-field {
+                width: 94%;
+            }
         }
     }
 
@@ -204,28 +269,78 @@ form:not(.nav-form) {
         margin: 0px 0px 0px 0px;
         padding: 4px;
         color: $color-error-text;
-        max-width: 200px;
     }
 
     input[type=text], input[type=password] {
         @extend .input-field;
-        min-width: 200px;
     }
 
     input[type=number] {
         @extend .input-field;
-        min-width: 186px;
     }
 
     textarea {
         @extend .input-field;
         font: inherit;
-        min-width: 186px;
         min-height: 100px;
     }
 
     select {
         @extend .input-dropdown;
+    }
+}
+
+.col {
+    &-10 {
+        width: 10%
+    }
+
+    &-15 {
+        width: 15%;
+    }
+
+    &-20 {
+        width: 20%;
+    }
+
+    &-25 {
+        width: 25%;
+    }
+
+    &-30 {
+        width: 30%;
+    }
+
+    &-40 {
+        width: 40%;
+    }
+
+    &-45 {
+        width: 45%;
+    }
+
+    &-50 {
+        width: 50%;
+    }
+
+    &-60 {
+        width: 60%;
+    }
+
+    &-70 {
+        width: 70%;
+    }
+
+    &-75 {
+        width: 75%;
+    }
+
+    &-80 {
+        width: 80%;
+    }
+
+    &-90 {
+        width: 90%;
     }
 }
 
@@ -330,9 +445,9 @@ form:not(.nav-form) {
     }
 }
 
-.book-info {
+#book-info {
     @extend .view-section;
-    margin: 0px 0px 20px 0px;
+    margin: 20px 0px 30px 0px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -370,12 +485,12 @@ form:not(.nav-form) {
 
 .user-review {
     @extend .view-section;
-    margin: 0px 0px 20px 0px;
+    margin: 0px 0px 14px 0px;
 
     & > div {
         margin: 8px 0px;
 
-        &:first-child {
+        &:nth-child(2), &.right-align {
             margin-top: 0px;
         }
 
@@ -389,7 +504,7 @@ form:not(.nav-form) {
     }
 }
 
-.community-reviews {
+#community-reviews {
     margin: 30px 0px 0px 0px;
 
     .review-stats {
@@ -411,10 +526,10 @@ form:not(.nav-form) {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     align-content: flex-start;
-    column-gap: 60px;
+    column-gap: 40px;
     row-gap: 20px;
 
     .section-title {

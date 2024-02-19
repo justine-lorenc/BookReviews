@@ -1,11 +1,16 @@
 nav {
   margin: 0px;
-  padding: 0px 2px 0px 2px;
+  padding: 0px 14px 0px 6px;
   background-color: #17528A;
 }
 nav .nav-item {
   display: inline-block;
   vertical-align: middle;
+}
+@media screen and (min-width: 520px) {
+  nav .nav-item-right {
+    float: right;
+  }
 }
 nav .nav-logo {
   padding: 2px 0px 2px 0px;
@@ -39,22 +44,43 @@ nav button {
   padding: 14px 2px 11px 2px;
 }
 
+html {
+  height: 100%;
+  margin: 0px;
+}
+
 body {
   font-family: Helvetica, sans-serif;
   font-size: 14px;
   color: #000000;
   background-color: #FEFEFE;
+  height: 100%;
   margin: 0px;
   padding: 0px;
 }
 
-.content {
+#page {
+  min-height: 100%;
+  margin: 0px 0px 40px 0px;
+}
+
+#content {
   max-width: 880px;
-  padding: 20px 20px 20px 20px;
+  padding: 20px 20px 24px 20px;
   margin: 0px auto 0px auto;
 }
 
-.view-section, #user-review-summary, #user-review-stats, .user-review, .book-info, .search-result {
+footer {
+  color: #FEFEFE;
+  background-color: #17528A;
+  height: 24px;
+  margin: -24px 0px 0px 0px;
+  padding: 8px 0px 0px 0px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.view-section, #user-review-summary, #user-review-stats, .user-review, #book-info, .search-result {
   background-color: #FEFEFE;
   border: 1px solid #E0E0E0;
   border-radius: 2px;
@@ -66,17 +92,17 @@ h1, h2, h3, h4, h5, h6 {
   color: #000000;
 }
 
-.input-field, #review-summary-table input, #review-summary-table_filter input[type=search], form:not(.nav-form) textarea, form:not(.nav-form) input[type=number], form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password], select.input-dropdown, .community-reviews .review-sort > select, form:not(.nav-form) select {
+.input-field, #review-summary-table input, #review-summary-table_filter input[type=search], form:not(.nav-form) textarea, form:not(.nav-form) input[type=number], form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password], select.input-dropdown, #community-reviews .review-sort > select, form:not(.nav-form) select {
   background-color: #FEFEFE;
   border: 1px solid #7D7F7C;
   border-radius: 2px;
   padding: 4px 6px;
 }
-.input-field:focus, #review-summary-table input:focus, #review-summary-table_filter input[type=search]:focus, form:not(.nav-form) textarea:focus, form:not(.nav-form) input[type=number]:focus, form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus, select.input-dropdown:focus, .community-reviews .review-sort > select:focus, form:not(.nav-form) select:focus {
+.input-field:focus, #review-summary-table input:focus, #review-summary-table_filter input[type=search]:focus, form:not(.nav-form) textarea:focus, form:not(.nav-form) input[type=number]:focus, form:not(.nav-form) input[type=text]:focus, form:not(.nav-form) input[type=password]:focus, select.input-dropdown:focus, #community-reviews .review-sort > select:focus, form:not(.nav-form) select:focus {
   outline: none;
 }
 
-select.input-dropdown option, .community-reviews .review-sort > select option, form:not(.nav-form) select option {
+select.input-dropdown option, #community-reviews .review-sort > select option, form:not(.nav-form) select option {
   background-color: #FEFEFE;
   padding: 4px 6px;
 }
@@ -99,9 +125,12 @@ a:active {
   color: #7BB5E7;
 }
 
-.horizontal-links > a, .horizontal-links > h3 {
+.horizontal-links > a {
   display: inline-block;
-  margin-right: 10px;
+  margin: 0px 14px 0px 0px;
+}
+.horizontal-links > a:last-child {
+  margin: 0px 0px 0px 0px;
 }
 
 button {
@@ -131,11 +160,27 @@ form:not(.nav-form).form-horizontal {
   align-items: center;
   align-content: center;
   column-gap: 14px;
-  min-width: 50%;
-  max-width: 50%;
+  padding: 20px;
+  width: 60%;
 }
-form:not(.nav-form).form-horizontal select {
-  min-width: 100px;
+@media screen and (max-width: 600px) {
+  form:not(.nav-form).form-horizontal {
+    width: 50%;
+  }
+  form:not(.nav-form).form-horizontal [class^=col-] {
+    margin: 0px 0px 20px 0px;
+    width: 92%;
+    text-align: center;
+  }
+  form:not(.nav-form).form-horizontal [class^=col-]:last-child {
+    margin: 0px;
+  }
+}
+form:not(.nav-form).form-horizontal .form-field {
+  width: 100%;
+}
+form:not(.nav-form).form-horizontal textarea.form-field, form:not(.nav-form).form-horizontal input.form-field {
+  width: 94%;
 }
 form:not(.nav-form).form-vertical {
   display: flex;
@@ -145,11 +190,19 @@ form:not(.nav-form).form-vertical {
   align-items: center;
   align-content: center;
   row-gap: 14px;
-  min-width: 20%;
-  max-width: 30%;
+  padding: 20px;
+  width: 30%;
 }
-form:not(.nav-form).form-vertical select {
-  min-width: 200px;
+@media screen and (max-width: 600px) {
+  form:not(.nav-form).form-vertical {
+    width: 50%;
+  }
+}
+form:not(.nav-form).form-vertical .form-field {
+  width: 100%;
+}
+form:not(.nav-form).form-vertical textarea.form-field, form:not(.nav-form).form-vertical input.form-field {
+  width: 94%;
 }
 form:not(.nav-form) label {
   display: block;
@@ -160,19 +213,51 @@ form:not(.nav-form) .form-error {
   margin: 0px 0px 0px 0px;
   padding: 4px;
   color: #AF0000;
-  max-width: 200px;
-}
-form:not(.nav-form) input[type=text], form:not(.nav-form) input[type=password] {
-  min-width: 200px;
-}
-form:not(.nav-form) input[type=number] {
-  min-width: 186px;
 }
 form:not(.nav-form) textarea {
   font: inherit;
-  min-width: 186px;
   min-height: 100px;
 }
+.col-10 {
+  width: 10%;
+}
+.col-15 {
+  width: 15%;
+}
+.col-20 {
+  width: 20%;
+}
+.col-25 {
+  width: 25%;
+}
+.col-30 {
+  width: 30%;
+}
+.col-40 {
+  width: 40%;
+}
+.col-45 {
+  width: 45%;
+}
+.col-50 {
+  width: 50%;
+}
+.col-60 {
+  width: 60%;
+}
+.col-70 {
+  width: 70%;
+}
+.col-75 {
+  width: 75%;
+}
+.col-80 {
+  width: 80%;
+}
+.col-90 {
+  width: 90%;
+}
+
 .message, .message-warning, .message-error, .message-success {
   border-radius: 2px;
   padding: 8px;
@@ -251,8 +336,8 @@ form:not(.nav-form) textarea {
   margin-bottom: 0px;
 }
 
-.book-info {
-  margin: 0px 0px 20px 0px;
+#book-info {
+  margin: 20px 0px 30px 0px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -262,16 +347,16 @@ form:not(.nav-form) textarea {
   column-gap: 4px;
   row-gap: 4px;
 }
-.book-info .book-details > div, .book-info .book-details > a, .book-info h3 {
+#book-info .book-details > div, #book-info .book-details > a, #book-info h3 {
   margin: 8px 10px;
 }
-.book-info .book-details > div:first-child, .book-info .book-details > a:first-child, .book-info h3:first-child {
+#book-info .book-details > div:first-child, #book-info .book-details > a:first-child, #book-info h3:first-child {
   margin-top: 0px;
 }
-.book-info .book-details > div:last-child, .book-info .book-details > a:last-child, .book-info h3:last-child {
+#book-info .book-details > div:last-child, #book-info .book-details > a:last-child, #book-info h3:last-child {
   margin-bottom: 0px;
 }
-.book-info .book-details > div.core-detail, .book-info .book-details > a.core-detail, .book-info h3.core-detail {
+#book-info .book-details > div.core-detail, #book-info .book-details > a.core-detail, #book-info h3.core-detail {
   font-weight: bold;
 }
 
@@ -285,12 +370,12 @@ form:not(.nav-form) textarea {
 }
 
 .user-review {
-  margin: 0px 0px 20px 0px;
+  margin: 0px 0px 14px 0px;
 }
 .user-review > div {
   margin: 8px 0px;
 }
-.user-review > div:first-child {
+.user-review > div:nth-child(2), .user-review > div.right-align {
   margin-top: 0px;
 }
 .user-review > div:last-child {
@@ -300,13 +385,13 @@ form:not(.nav-form) textarea {
   font-weight: bold;
 }
 
-.community-reviews {
+#community-reviews {
   margin: 30px 0px 0px 0px;
 }
-.community-reviews .review-stats {
+#community-reviews .review-stats {
   margin: 0px 0px 14px 0px;
 }
-.community-reviews .review-sort {
+#community-reviews .review-sort {
   margin: 0px 0px 14px 0px;
 }
 #user-review-stats {
@@ -314,10 +399,10 @@ form:not(.nav-form) textarea {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
   align-content: flex-start;
-  column-gap: 60px;
+  column-gap: 40px;
   row-gap: 20px;
 }
 #user-review-stats .section-title {

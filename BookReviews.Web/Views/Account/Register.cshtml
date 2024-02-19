@@ -22,29 +22,29 @@
     {
         @Html.AntiForgeryToken()
 
-        <div>
+        <div class="col-90">
             @Html.LabelFor(m => m.EmailAddress)
-            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = 100 })
+            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = 100, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.EmailAddress, null, new { @class = "form-error" })
         </div>
-        <div>
+        <div class="col-90">
             @Html.LabelFor(m => m.Password)
-            @Html.TextBoxFor(m => m.Password, new { maxLength = 50, type = "password" })
+            @Html.TextBoxFor(m => m.Password, new { maxLength = 50, type = "password", @class = "form-field" })
             @Html.ValidationMessageFor(m => m.Password, null, new { @class = "form-error" })
         </div>
-        <div>
+        <div class="col-90">
             @Html.LabelFor(m => m.ConfirmPassword)
-            @Html.TextBoxFor(m => m.ConfirmPassword, new { maxLength = 50, type = "password" })
+            @Html.TextBoxFor(m => m.ConfirmPassword, new { maxLength = 50, type = "password", @class = "form-field" })
             @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "form-error" })
         </div>
-        <div>
+        <div class="col-90">
             @Html.LabelFor(m => m.FirstName)
-            @Html.TextBoxFor(m => m.FirstName, new { maxLength = 50 })
+            @Html.TextBoxFor(m => m.FirstName, new { maxLength = 50, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "form-error" })
         </div>
-        <div>
+        <div class="col-90">
             @Html.LabelFor(m => m.LastName)
-            @Html.TextBoxFor(m => m.LastName, new { maxLength = 50 })
+            @Html.TextBoxFor(m => m.LastName, new { maxLength = 50, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "form-error" })
         </div>
         <div>

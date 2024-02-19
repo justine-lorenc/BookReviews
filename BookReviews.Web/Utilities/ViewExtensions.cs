@@ -34,7 +34,7 @@ namespace BookReviews.Web.Utilities
                     authorLinks = authorLinks.TrimEnd(new char[] { ',', ' ' });
 
                     if (listMax < authors.Count)
-                        authorLinks += $" (+{authors.Count - listLimit} more)";
+                        authorLinks += $" (+{authors.Count - listLimit})";
                 }
                 else
                 {
@@ -81,10 +81,12 @@ namespace BookReviews.Web.Utilities
 
         public static string TruncateDescription(string description, int maxLength)
         {
-            if (!String.IsNullOrWhiteSpace(description))
+            if (!String.IsNullOrWhiteSpace(description) && description.Length > maxLength)
             {
-                description = description.Length > maxLength
-                    ? $"{description.Substring(0, maxLength)}..." : description;
+                description = description.Substring(0, maxLength)
+                    .TrimEnd(new char[] { ' ', ',', '-', ':', ';', '.', '!', '?', '"', '\'', '(', ')' });
+
+                description += "...";
             }
 
             return description;

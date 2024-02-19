@@ -14,12 +14,12 @@
 
     @using (Html.BeginForm("Search", "Book", FormMethod.Get, new { @class = "form-horizontal" }))
     {
-        <div>
-            @Html.EnumDropDownListFor(m => m.SearchCategory)
+        <div class="col-30">
+            @Html.EnumDropDownListFor(m => m.SearchCategory, new { @class = "form-field" })
             @Html.ValidationMessageFor(m => m.SearchCategory)
         </div>
-        <div>
-            @Html.TextBoxFor(m => m.SearchTerm, new { maxLength = 50 })
+        <div class="col-45">
+            @Html.TextBoxFor(m => m.SearchTerm, new { maxLength = 50, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.SearchTerm)
         </div>
         <div>
@@ -34,29 +34,20 @@
         foreach (var result in Model.Results)
         {
             <div class="search-result">
-                @{
-                    string authors = ViewExtensions.GetAuthorLinks(result.Authors, 2);
-
-                    string description = String.Empty;
-                    if (!String.IsNullOrWhiteSpace(result.Description))
-                    {
-                        description = result.Description.Length > 300
-                            ? $"{result.Description.Substring(0, 300)}..." : result.Description;
-                    }
-                }
                 <div class="book-cover">
                     @Html.Raw(ViewExtensions.GetCoverImage(@result.CoverUrl, ImageSize.Medium))
                 </div>
+
                 <div class="book-summary">
                     <div>
                         @Html.Raw(ViewExtensions.GetTitleLink(result.Title, result.Id))
                     </div>
 
-                    <div>By @Html.Raw(authors)</div>
+                    <div>By @Html.Raw(ViewExtensions.GetAuthorLinks(result.Authors, 2))</div>
 
                     <div>Published @result.DatePublished.Year</div>
 
-                    <div>@description</div>
+                    <div>@ViewExtensions.TruncateDescription(result.Description, 300)</div>
                 </div>
             </div>
         }

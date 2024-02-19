@@ -21,23 +21,24 @@
     @Html.HiddenFor(m => Model.Genres[i].IsFiction)
 }
 
-<div>
+<div class="col-90">
     @Html.LabelFor(m => m.Rating)
-    @Html.TextBoxFor(m => m.Rating, null, new { type = "number", value = 0.0, step = 0.5, min = 0.0, max = 5.0 })
+    @Html.TextBoxFor(m => m.Rating, null, new { type = "number", value = 0.0, step = 0.5, min = 0.0, max = 5.0, 
+        @class = "form-field" })
     @Html.ValidationMessageFor(m => m.Rating, null, new { @class = "form-error" })
 </div>
-<div>
+<div class="col-90">
     @Html.LabelFor(m => m.BookFormat)
-    @Html.EnumDropDownListFor(m => m.BookFormat)
+    @Html.EnumDropDownListFor(m => m.BookFormat, new { @class = "form-field" })
     @Html.ValidationMessageFor(m => m.BookFormat, null, new { @class = "form-error" })
 </div>
-<div>
+<div class="col-90">
     @Html.LabelFor(m => m.GenreId)
-    @Html.DropDownListFor(m => m.GenreId, new SelectList(Model.Genres, "Id", "Name"), Model.GenreId)
+    @Html.DropDownListFor(m => m.GenreId, new SelectList(Model.Genres, "Id", "Name", Model.GenreId), new { @class = "form-field" })
     @Html.ValidationMessageFor(m => m.GenreId, null, new { @class = "form-error" })
 </div>
-<div>
+<div class="col-90">
     @Html.LabelFor(m => m.Notes)
-    @Html.TextAreaFor(m => m.Notes, new { maxLength = 1000 })
+    @Html.TextAreaFor(m => m.Notes, new { maxLength = 1000, @class = "form-field" })
     @Html.ValidationMessageFor(m => m.Notes, null, new { @class = "form-error" })
 </div>

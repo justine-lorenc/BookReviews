@@ -17,14 +17,14 @@
     {
         @Html.AntiForgeryToken()
 
-        <div>
+        <div class="col-90">
             @Html.LabelFor(m => m.EmailAddress)
-            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = 100 })
+            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = 100, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.EmailAddress, null, new { @class = "form-error" })
         </div>
-        <div>
+        <div class="col-90">
             @Html.LabelFor(m => m.Password)
-            @Html.TextBoxFor(m => m.Password, new { maxLength = 50, type = "password" })
+            @Html.TextBoxFor(m => m.Password, new { maxLength = 50, type = "password", @class = "form-field" })
             @Html.ValidationMessageFor(m => m.Password, null, new { @class = "form-error" })
         </div>
         <div>
