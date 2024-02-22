@@ -72,7 +72,7 @@ namespace BookReviews.Web.Utilities
             if (String.IsNullOrWhiteSpace(coverUrl))
                 imageUrl = "/Content/Images/GenericCover.png";
             else
-                imageUrl = coverUrl.Replace("&edge=curl", "");
+                imageUrl = coverUrl.Replace("&edge=curl", "").Replace("http:", "https:");
 
             coverImage = $"<img src=\"{imageUrl}\" width=\"{imageWidth}\" height=\"{imageHeight}\" alt=\"Book cover\" />";
 

@@ -15,5 +15,23 @@ namespace BookReviews.Impl.Models
         // a first, middle, or last name.
         // Ex: Gabriel Garcia Marquez, Miguel de Cervantes, L.M. Montgomery, F. Scott Fitzgerald, Edgar Allen Poe
         public string Name { get; set; }
+
+        public bool IsValid(out string errorMessage)
+        {
+            errorMessage = String.Empty;
+
+            if (String.IsNullOrWhiteSpace(Name))
+            {
+                errorMessage = "Name is null or empty";
+                return false;
+            }
+            else if (Name.Length > Globals.MaxLengths.Author.Name)
+            {
+                errorMessage = "Name exceeds max length";
+                return false;
+            }
+
+            return true;
+        }
     }
 }

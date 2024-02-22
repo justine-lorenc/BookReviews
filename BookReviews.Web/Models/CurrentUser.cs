@@ -7,20 +7,28 @@ using Role = BookReviews.Impl.Models.Enums.Role;
 
 namespace BookReviews.Web.Models
 {
-    public class CurrentUser
+    public static class CurrentUser
     {
         public static int Id 
         {
             get
             {
-                ClaimsPrincipal user = HttpContext.Current?.User as ClaimsPrincipal;
+                int userId = 0;
 
-                if (user == null || user.Claims.Count() == 0)
-                    return 0;
+                try
+                {
+                    ClaimsPrincipal user = HttpContext.Current?.User as ClaimsPrincipal;
 
-                string userId = user.Claims.Where(x => x.Type == "UserId").Select(x => x.Value).FirstOrDefault();
+                    if (user == null || user.Claims == null || user.Claims.Count() == 0)
+                        return 0;
 
-                return Int32.Parse(userId);
+                    string id = user.Claims.Where(x => x.Type == "UserId").Select(x => x.Value).FirstOrDefault();
+
+                    Int32.TryParse(id, out userId);
+                }
+                catch { }
+
+                return userId;
             }
         }
 
@@ -36,10 +44,11 @@ namespace BookReviews.Web.Models
             try
             {
                 ClaimsPrincipal user = HttpContext.Current.User as ClaimsPrincipal;
-                if (user == null || user.Claims.Count() == 0)
+                if (user == null || user.Claims == null || user.Claims.Count() == 0)
                     return false;
 
-                List<Role> userRoles = user.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => (Role)Enum.Parse(typeof(Role), x.Value)).ToList();
+                List<Role> userRoles = user.Claims.Where(x => x.Type == ClaimTypes.Role)
+                    .Select(x => (Role)Enum.Parse(typeof(Role), x.Value)).ToList();
 
                 if (userRoles.Contains(Role.Admin) || userRoles.Contains(requiredRole))
                     return true;

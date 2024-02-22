@@ -15,6 +15,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using User = BookReviews.Impl.Models.User;
 using Role = BookReviews.Impl.Models.Enums.Role;
+using BookReviews.Impl.Models;
 
 namespace BookReviews.Web.Controllers
 {
@@ -25,7 +26,9 @@ namespace BookReviews.Web.Controllers
         IMapper _mapper;
         IUserLogic _userLogic;
 
-        public AccountController(IAuthenticationManager authenticationManager, IMapper mapper, IUserLogic userLogic)
+        public AccountController(IAuthenticationManager authenticationManager, IMapper mapper, 
+            IExceptionLogic exceptionLogic, IUserLogic userLogic)
+            : base (exceptionLogic)
         {
             _authenticationManager = authenticationManager;
             _mapper = mapper;
@@ -53,9 +56,9 @@ namespace BookReviews.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            User user = _mapper.Map<User>(model);
+            NewAccount newAccount = _mapper.Map<NewAccount>(model);
 
-            bool result = await _userLogic.RegisterAccount(user, model.Password);
+            bool result = await _userLogic.RegisterAccount(newAccount);
 
             if (!result)
             {

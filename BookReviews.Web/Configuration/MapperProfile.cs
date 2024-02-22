@@ -11,11 +11,12 @@ namespace BookReviews.Web.Configuration
     {
         public MapperProfile()
         {
-            CreateMap<RegisterVM, Impl.Models.User>()
+            CreateMap<RegisterVM, Impl.Models.NewAccount>()
                 .ForMember(d => d.Id, src => src.Ignore())
-                .ForMember(d => d.EmailAddress, src => src.MapFrom(s => s.EmailAddress))
                 .ForMember(d => d.FirstName, src => src.MapFrom(s => s.FirstName))
-                .ForMember(d => d.LastName, src => src.MapFrom(s => s.LastName));
+                .ForMember(d => d.LastName, src => src.MapFrom(s => s.LastName))
+                .ForMember(d => d.EmailAddress, src => src.MapFrom(s => s.EmailAddress))
+                .ForMember(d => d.Password, src => src.MapFrom(s => s.Password));
 
             CreateMap<AddReviewVM, Impl.Models.Review>()
                 .ForMember(d => d.Id, src => src.Ignore())

@@ -1,4 +1,5 @@
 ﻿@model BookReviews.Web.ViewModels.RegisterVM
+@using BookReviews.Impl;
 
 @{
     ViewBag.Title = "Register";
@@ -24,27 +25,29 @@
 
         <div class="col-90">
             @Html.LabelFor(m => m.EmailAddress)
-            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = 100, @class = "form-field" })
+            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = Globals.MaxLengths.User.EmailAddress, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.EmailAddress, null, new { @class = "form-error" })
         </div>
         <div class="col-90">
             @Html.LabelFor(m => m.Password)
-            @Html.TextBoxFor(m => m.Password, new { maxLength = 50, type = "password", @class = "form-field" })
+            @Html.TextBoxFor(m => m.Password, new { maxLength = Globals.MaxLengths.User.Password, 
+                type = "password", @class = "form-field" })
             @Html.ValidationMessageFor(m => m.Password, null, new { @class = "form-error" })
         </div>
         <div class="col-90">
             @Html.LabelFor(m => m.ConfirmPassword)
-            @Html.TextBoxFor(m => m.ConfirmPassword, new { maxLength = 50, type = "password", @class = "form-field" })
+            @Html.TextBoxFor(m => m.ConfirmPassword, new { maxLength = Globals.MaxLengths.User.Password, 
+                type = "password", @class = "form-field" })
             @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "form-error" })
         </div>
         <div class="col-90">
             @Html.LabelFor(m => m.FirstName)
-            @Html.TextBoxFor(m => m.FirstName, new { maxLength = 50, @class = "form-field" })
+            @Html.TextBoxFor(m => m.FirstName, new { maxLength = Globals.MaxLengths.User.FirstName, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.FirstName, null, new { @class = "form-error" })
         </div>
         <div class="col-90">
             @Html.LabelFor(m => m.LastName)
-            @Html.TextBoxFor(m => m.LastName, new { maxLength = 50, @class = "form-field" })
+            @Html.TextBoxFor(m => m.LastName, new { maxLength = Globals.MaxLengths.User.LastName, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.LastName, null, new { @class = "form-error" })
         </div>
         <div>

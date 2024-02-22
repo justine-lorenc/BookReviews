@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Error";
+}
+
+<div>
+    <h3>@ViewBag.Title</h3>
+
+    <div class="message-error">
+        <div>An unexpected error occurred while processing your request.</div>
+
+        @if (ViewBag.ErrorId != null)
+        {
+            <br />
+            <div>Ticket Number: @ViewBag.ErrorId</div>
+        }
+    </div>
+</div>

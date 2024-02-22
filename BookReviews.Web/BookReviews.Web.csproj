@@ -135,7 +135,7 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\Errors\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Book\Search.cshtml" />
@@ -143,7 +143,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_ResultMessage.cshtml" />
-    <Content Include="Views\Shared\Forbidden.cshtml" />
+    <Content Include="Views\Shared\Errors\Forbidden.cshtml" />
     <Content Include="Views\Review\AddReview.cshtml" />
     <Content Include="Views\Review\EditReview.cshtml" />
     <Content Include="Views\Review\_ReviewFields.cshtml" />

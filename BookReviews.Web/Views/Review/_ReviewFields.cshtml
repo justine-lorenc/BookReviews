@@ -1,4 +1,5 @@
 ﻿@model BookReviews.Web.ViewModels.AddReviewVM
+@using BookReviews.Impl;
 
 @Html.HiddenFor(m => m.Book.Id)
 @Html.HiddenFor(m => m.Book.Title)
@@ -23,8 +24,8 @@
 
 <div class="col-90">
     @Html.LabelFor(m => m.Rating)
-    @Html.TextBoxFor(m => m.Rating, null, new { type = "number", value = 0.0, step = 0.5, min = 0.0, max = 5.0, 
-        @class = "form-field" })
+    @Html.TextBoxFor(m => m.Rating, null, new { type = "number", value = 0.0, step = Globals.Ranges.Rating.Increment, 
+        min = Globals.Ranges.Rating.Minimum, max = Globals.Ranges.Rating.Maximum, @class = "form-field" })
     @Html.ValidationMessageFor(m => m.Rating, null, new { @class = "form-error" })
 </div>
 <div class="col-90">
@@ -39,6 +40,6 @@
 </div>
 <div class="col-90">
     @Html.LabelFor(m => m.Notes)
-    @Html.TextAreaFor(m => m.Notes, new { maxLength = 1000, @class = "form-field" })
+    @Html.TextAreaFor(m => m.Notes, new { maxLength = Globals.MaxLengths.Review.Notes, @class = "form-field" })
     @Html.ValidationMessageFor(m => m.Notes, null, new { @class = "form-error" })
 </div>

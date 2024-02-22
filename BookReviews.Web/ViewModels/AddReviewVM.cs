@@ -1,4 +1,5 @@
-﻿using BookReviews.Impl.Models;
+﻿using BookReviews.Impl;
+using BookReviews.Impl.Models;
 using BookReviews.Impl.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace BookReviews.Web.ViewModels
 
         [Display(Name = "Star Rating")]
         [Required(ErrorMessage = "Required")]
+        [Range(Globals.Ranges.Rating.Minimum, Globals.Ranges.Rating.Maximum, 
+            ErrorMessage = "Rating must be between 0.0 and 5.0")]
         public float Rating { get; set; }
 
         [Display(Name = "Format Read")]
@@ -29,7 +32,7 @@ namespace BookReviews.Web.ViewModels
         public short GenreId { get; set; }
 
         [Display(Name = "Notes")]
-        [MaxLength(1000, ErrorMessage = "Max 1000 characters")]
+        [MaxLength(Globals.MaxLengths.Review.Notes, ErrorMessage = "4000 characters max")]
         public string Notes { get; set; }
     }
 }

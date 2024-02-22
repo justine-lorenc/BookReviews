@@ -1,4 +1,5 @@
 ﻿@model BookReviews.Web.ViewModels.LoginVM
+@using BookReviews.Impl;
 
 @{
     ViewBag.Title = "Log In";
@@ -19,12 +20,13 @@
 
         <div class="col-90">
             @Html.LabelFor(m => m.EmailAddress)
-            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = 100, @class = "form-field" })
+            @Html.TextBoxFor(m => m.EmailAddress, new { maxLength = Globals.MaxLengths.User.EmailAddress, @class = "form-field" })
             @Html.ValidationMessageFor(m => m.EmailAddress, null, new { @class = "form-error" })
         </div>
         <div class="col-90">
             @Html.LabelFor(m => m.Password)
-            @Html.TextBoxFor(m => m.Password, new { maxLength = 50, type = "password", @class = "form-field" })
+            @Html.TextBoxFor(m => m.Password, new { maxLength = Globals.MaxLengths.User.Password, type = "password", 
+                @class = "form-field" })
             @Html.ValidationMessageFor(m => m.Password, null, new { @class = "form-error" })
         </div>
         <div>

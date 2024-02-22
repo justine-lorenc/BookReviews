@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using BookSearchResult = BookReviews.Impl.Entities.BookSearchResult;
+using Exception = System.Exception;
 
 namespace BookReviews.Impl.Repositories
 {
@@ -33,7 +34,7 @@ namespace BookReviews.Impl.Repositories
             var response = await client.GetAsync(requestUrl);
 
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Search failed: {(short)response.StatusCode} {response.ReasonPhrase}");
+                throw new System.Exception($"Search failed: {(short)response.StatusCode} {response.ReasonPhrase}");
 
             string content = await response.Content.ReadAsStringAsync();
             books = ParseBookSearchResults(content);
@@ -63,7 +64,7 @@ namespace BookReviews.Impl.Repositories
                     queryType += "isbn:";
                     break;
                 default:
-                    throw new Exception("Invalid search category");
+                    throw new Exception("Search category is invalid");
             }
 
             queryUrl += $"q={queryType}{HttpUtility.UrlEncode(searchTerm)}";

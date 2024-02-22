@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using BookReviews.Web.Models;
 using BookReviews.Web.Filters;
 using BookReviews.Impl.Models.Enums;
+using BookReviews.Impl;
 
 namespace BookReviews.Web.Controllers
 {
@@ -22,7 +23,8 @@ namespace BookReviews.Web.Controllers
         private IBookLogic _bookLogic;
         private IReviewLogic _reviewLogic;
 
-        public ReviewController(IMapper mapper, IBookLogic bookLogic, IReviewLogic reviewLogic)
+        public ReviewController(IMapper mapper, IBookLogic bookLogic, IExceptionLogic exceptionLogic, IReviewLogic reviewLogic)
+            : base(exceptionLogic)
         {
             _mapper = mapper;
             _bookLogic = bookLogic;
@@ -30,11 +32,11 @@ namespace BookReviews.Web.Controllers
         }
 
         [HttpGet]
-        [Route("~/user/{id:int}/reviews")]
+        [Route("~/users/{id:int}/reviews")]
         public async Task<ActionResult> UserReviews(int id, int year = 0)
         {
             if (id == 0)
-                throw new Exception("Invalid user ID");
+                throw new Exception("User ID is invalid");
             else if (id != CurrentUser.Id && !CurrentUser.HasAbility(Role.Admin))
                 return RedirectToAction("Forbidden", "Home");
 
@@ -150,6 +152,9 @@ namespace BookReviews.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddReview(AddReviewVM model)
         {
+            if ((model.Rating % Globals.Ranges.Rating.Increment) != 0)
+                ModelState.AddModelError("Rating", $"Rating must be a multiple of 0.5");
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -184,6 +189,9 @@ namespace BookReviews.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditReview(int id, EditReviewVM model)
         {
+            if ((model.Rating % Globals.Ranges.Rating.Increment) != 0)
+                ModelState.AddModelError("Rating", $"Rating must be a multiple of 0.5");
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -203,11 +211,11 @@ namespace BookReviews.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Delete)]
         [Route("{id:int}/delete")]
         [HasAbility(Role.DeleteReview)]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> DeleteReview(int id, long bookId)
         {
             if (id == 0)
             {
-                SetResultMessage(MessageType.Error, "Failed to delete review");
                 return Json(new { success = false });
             }
 
@@ -215,7 +223,6 @@ namespace BookReviews.Web.Controllers
 
             if (!result)
             {
-                SetResultMessage(MessageType.Error, "Failed to delete review");
                 return Json(new { success = false });
             }
 

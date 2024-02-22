@@ -22,7 +22,7 @@
 
             <div>@Model.TotalBooks books read</div>
 
-            <div>@Model.TotalPages.ToString("##,###") total pages</div>
+            <div>@Model.TotalPages.ToString("##,##0") total pages</div>
 
             <div>@Model.AverageRating.ToString("0.00") average rating</div>
 
@@ -139,7 +139,7 @@
                 const userId = $(this).attr("data-user-id");
                 let year = $(this).val();
 
-                let url = "/user/" + userId + "/reviews?year=" + year;
+                let url = "/users/" + userId + "/reviews?year=" + year;
                 window.location.href = url;
             });
         });

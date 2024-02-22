@@ -22,7 +22,8 @@ namespace BookReviews.Web.Controllers
         private IBookLogic _bookLogic;
         private IReviewLogic _reviewLogic;
 
-        public BookController(IMapper mapper, IBookLogic bookLogic, IReviewLogic reviewLogic)
+        public BookController(IMapper mapper, IBookLogic bookLogic, IExceptionLogic exceptionLogic, IReviewLogic reviewLogic)
+            : base(exceptionLogic)
         {
             _mapper = mapper;
             _bookLogic = bookLogic;
@@ -34,7 +35,7 @@ namespace BookReviews.Web.Controllers
         public async Task<ActionResult> Index(long id, SortBy sortReviewsBy = SortBy.DateDescending)
         {
             if (id == 0)
-                throw new Exception("Invalid book ID");
+                throw new Exception("Book ID is invalid");
 
             Book book = await _bookLogic.GetBook(id);
 

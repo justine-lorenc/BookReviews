@@ -5,19 +5,24 @@ using Konscious.Security.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Exception = System.Exception;
 
 namespace BookReviews.Impl.Logic
 {
     public class UserLogic : IUserLogic
     {
         private IMapper _mapper;
+        private IExceptionLogic _exceptionLogic;
         private IUserRepository _userRepository;
 
-        public UserLogic(IMapper mapper, IUserRepository userRepository)
+        public UserLogic(IMapper mapper, IExceptionLogic exceptionLogic, IUserRepository userRepository)
         {
             _mapper = mapper;
+            _exceptionLogic = exceptionLogic;
             _userRepository = userRepository;
         }
 
@@ -25,6 +30,13 @@ namespace BookReviews.Impl.Logic
         {
             try
             {
+                if (String.IsNullOrWhiteSpace(username))
+                    throw new Exception("Username is null or empty");
+                else if (String.IsNullOrWhiteSpace(password))
+                    throw new Exception("Password is null or empty");
+                else if (!Regex.IsMatch(password, Globals.RegularExpressions.Password))
+                    throw new Exception("Password has invalid format");
+
                 Entities.User userRecord = await _userRepository.GetUser(username);
 
                 if (userRecord == null || !userRecord.IsActive)
@@ -33,31 +45,40 @@ namespace BookReviews.Impl.Logic
                 bool credentialsValid = VerifyCredentials(username, password, userRecord.PasswordHash);
 
                 if (!credentialsValid)
-                    throw new Exception("Invalid credentials");
+                    throw new Exception("Username or password is incorrect");
 
                 Models.User userResult = _mapper.Map<Models.User>(userRecord);
                 return userResult;
             }
             catch (Exception ex)
             {
-                // log error here
+                var arguments = new Dictionary<string, string>();
+                arguments.Add("Username", username);
+
+                await _exceptionLogic.LogException(ex, "Authenticate user error", arguments);
+
                 return null;
             }
         }
 
-        public async Task<bool> RegisterAccount(Models.User user, string password)
+        public async Task<bool> RegisterAccount(Models.NewAccount account)
         {
             try
             {
+                if (account == null)
+                    throw new Exception("Account is null");
+                else if (!account.IsValid(out string errorMessage))
+                    throw new Exception(errorMessage);
+
                 // check that an account with this email address does not exist
-                Entities.User userRecord = await _userRepository.GetUser(user.EmailAddress);
+                Entities.User userRecord = await _userRepository.GetUser(account.EmailAddress);
 
                 if (userRecord != null)
                     throw new Exception("An account already exists for this email");
 
-                string hashedPassword = HashPassword(user.EmailAddress, password);
+                string hashedPassword = HashPassword(account.EmailAddress, account.Password);
 
-                Entities.User newUserRecord = _mapper.Map<Entities.User>(user);
+                Entities.User newUserRecord = _mapper.Map<Entities.User>(account);
                 newUserRecord.PasswordHash = hashedPassword;
 
                 int userId = await _userRepository.InsertUser(newUserRecord);
@@ -69,7 +90,16 @@ namespace BookReviews.Impl.Logic
             }
             catch (Exception ex)
             {
-                // log error here
+                var arguments = new Dictionary<string, string>();
+                if (account != null)
+                {
+                    arguments.Add("EmailAddress", account.EmailAddress);
+                    arguments.Add("FirstName", account.FirstName);
+                    arguments.Add("LastName", account.LastName);
+                }
+
+                await _exceptionLogic.LogException(ex, "Register account error", arguments);
+
                 return false;
             }
         }
@@ -78,6 +108,9 @@ namespace BookReviews.Impl.Logic
         {
             try
             {
+                if (userId == 0)
+                    throw new Exception("User ID is invalid");
+
                 List<Entities.Enums.Role> roleRecords = await _userRepository.GetUserRoles(userId);
                 List<Models.Enums.Role> roleResults = _mapper.Map<List<Models.Enums.Role>>(roleRecords);
 
@@ -85,7 +118,11 @@ namespace BookReviews.Impl.Logic
             }
             catch (Exception ex)
             {
-                // log error here
+                var arguments = new Dictionary<string, string>();
+                arguments.Add("UserId", userId.ToString());
+
+                await _exceptionLogic.LogException(ex, "Get user roles error", arguments);
+
                 return new List<Models.Enums.Role>();
             }
         }

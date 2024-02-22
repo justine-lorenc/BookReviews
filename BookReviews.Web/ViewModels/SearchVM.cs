@@ -1,4 +1,5 @@
-﻿using BookReviews.Impl.Models;
+﻿using BookReviews.Impl;
+using BookReviews.Impl.Models;
 using BookReviews.Impl.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace BookReviews.Web.ViewModels
         public SearchCategory SearchCategory { get; set; }
 
         [Required(ErrorMessage = "Required")]
-        [StringLength(50, ErrorMessage = "Max 50 characters")]
+        [StringLength(Globals.MaxLengths.SearchTerm, ErrorMessage = "100 characters max")]
         public string SearchTerm { get; set; }
 
         public List<Book> Results { get; set; }

@@ -22,6 +22,19 @@ namespace BookReviews.Impl.Entities
         public List<IndustryIdentifier> IndustryIdentifiers { get; set; }
         public ImageLinks ImageLinks { get; set; }
         public List<string> Authors { get; set; }
+
+        public bool IsValid(out string errorMessage)
+        {
+            errorMessage = String.Empty;
+
+            if (!IndustryIdentifiers.Any(y => y.Type.Equals("ISBN_13", StringComparison.OrdinalIgnoreCase)))
+            {
+                errorMessage = "ISBN-13 number is missing";
+                return false;
+            }
+
+            return true;
+        }
     }
 
     public class IndustryIdentifier

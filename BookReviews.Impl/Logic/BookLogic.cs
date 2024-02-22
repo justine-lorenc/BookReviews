@@ -8,19 +8,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Exception = System.Exception;
 
 namespace BookReviews.Impl.Logic
 {
     public class BookLogic : IBookLogic
     {
         private IMapper _mapper;
+        private IExceptionLogic _exceptionLogic;
         private IAuthorRepository _authorRepository;
         private IBookRepository _bookRepository;
         private ISearchRepository _searchRepository;
 
-        public BookLogic(IMapper mapper, IAuthorRepository authorRepository, IBookRepository bookRepository, ISearchRepository searchRepository)
+        public BookLogic(IMapper mapper, IExceptionLogic exceptionLogic, IAuthorRepository authorRepository, 
+            IBookRepository bookRepository, ISearchRepository searchRepository)
         {
             _mapper = mapper;
+            _exceptionLogic = exceptionLogic;
             _authorRepository = authorRepository;
             _bookRepository = bookRepository;
             _searchRepository = searchRepository;
@@ -30,6 +34,9 @@ namespace BookReviews.Impl.Logic
         {
             try
             {
+                if (bookId == 0 || bookId.ToString().Length < Globals.MaxLengths.Book.Id)
+                    throw new Exception("Book ID is invalid");
+
                 // check if the book exists in the database first
                 Entities.Book existingBook = await _bookRepository.GetFullBook(bookId);
 
@@ -45,7 +52,11 @@ namespace BookReviews.Impl.Logic
             }
             catch (Exception ex)
             {
-                // log error here
+                var arguments = new Dictionary<string, string>();
+                arguments.Add("BookId", bookId.ToString());
+
+                await _exceptionLogic.LogException(ex, "Get book error", arguments);
+
                 return null;
             }
         }
@@ -54,6 +65,11 @@ namespace BookReviews.Impl.Logic
         {
             try
             {
+                if (bookIds == null || bookIds.Count == 0)
+                    throw new Exception("Book ID list is null or empty");
+                else if (bookIds.Any(x => x == 0 || x.ToString().Length < Globals.MaxLengths.Book.Id))
+                    throw new Exception("Book ID list contains an invalid entry");
+
                 // check if the books exist in the database first
                 List<Entities.Book> existingBooks = await _bookRepository.GetFullBooks(bookIds);
                 List<Models.Book> bookResults = _mapper.Map<List<Models.Book>>(existingBooks);
@@ -70,7 +86,7 @@ namespace BookReviews.Impl.Logic
                         Models.Book missingBook = searchResults.FirstOrDefault();
 
                         if (missingBook == null)
-                            throw new Exception("Failed to retrieve a book");
+                            throw new Exception($"Failed to retrieve book with ID {missingBookId}");
 
                         bookResults.Add(missingBook);
                     }
@@ -80,7 +96,12 @@ namespace BookReviews.Impl.Logic
             }
             catch (Exception ex)
             {
-                // log error here
+                var arguments = new Dictionary<string, string>();
+                if (bookIds != null)
+                    arguments.Add("BookIdCount", bookIds.Count.ToString());
+
+                await _exceptionLogic.LogException(ex, "Get books error", arguments);
+
                 return new List<Models.Book>();
             }
         }
@@ -89,11 +110,17 @@ namespace BookReviews.Impl.Logic
         {
             try
             {
+                if (!Enum.IsDefined(typeof(SearchCategory), searchCategory))
+                    throw new Exception("Search category is undefined");
+                else if (String.IsNullOrWhiteSpace(searchTerm))
+                    throw new Exception("Search term is null or empty");
+                else if (searchTerm.Length > Globals.MaxLengths.SearchTerm)
+                    throw new Exception("Search term exceeds max length");
+
                 List<Entities.BookSearchResult> searchRecords = await _searchRepository.SearchBooks(searchCategory, searchTerm);
 
                 // exclude any books that don't have an ISBN-13 number, as that is the unique identifier
-                searchRecords = searchRecords.Where(x => x.IndustryIdentifiers.Any(y => y.Type.Equals("ISBN_13", StringComparison.OrdinalIgnoreCase)))
-                    .Select(x => x).ToList();
+                searchRecords = searchRecords.Where(x => x.IsValid(out string errorMessage)).Select(x => x).ToList();
 
                 List<Models.Book> books = _mapper.Map<List<Models.Book>>(searchRecords);
                 
@@ -101,7 +128,7 @@ namespace BookReviews.Impl.Logic
                 var bookResults = new List<Models.Book>();
                 foreach (var book in books)
                 {
-                    if (ValidateBook(book))
+                    if (book.IsValid(out string errorMessage))
                         bookResults.Add(book);
                 }
 
@@ -109,7 +136,12 @@ namespace BookReviews.Impl.Logic
             }
             catch (Exception ex)
             {
-                // log error here
+                var arguments = new Dictionary<string, string>();
+                arguments.Add("SearchCategory", searchCategory.ToString());
+                arguments.Add("SearchTerm", searchTerm);
+
+                await _exceptionLogic.LogException(ex, "Search books error", arguments);
+
                 return new List<Models.Book>();
             }
         }
@@ -118,6 +150,11 @@ namespace BookReviews.Impl.Logic
         {
             try
             {
+                if (book == null)
+                    throw new Exception("Book is null");
+                else if (!book.IsValid(out string errorMessage))
+                    throw new Exception(errorMessage);
+
                 // insert the book if it doesn't already exist
                 Entities.Book bookRecord = await _bookRepository.GetBook(book.Id);
 
@@ -146,7 +183,12 @@ namespace BookReviews.Impl.Logic
             }
             catch (Exception ex)
             {
-                // log error here
+                var arguments = new Dictionary<string, string>();
+                if (book != null)
+                    arguments.Add("BookId", book.Id.ToString());
+
+                await _exceptionLogic.LogException(ex, "Add book error", arguments);
+
                 return false;
             }
         }
@@ -154,6 +196,12 @@ namespace BookReviews.Impl.Logic
         private async Task<List<int>> AddAuthors(List<Models.Author> authors)
         {
             var authorIds = new List<int>();
+
+            if (authors == null || authors.Count == 0)
+                throw new Exception("Author list is null or empty");
+            else if (authors.Any(x => !x.IsValid(out string errorMessage)))
+                throw new Exception("Author list contains an invalid entry");
+
             List<string> authorNames = authors.Select(x => x.Name).ToList();
             List<Entities.Author> existingAuthors = await _authorRepository.GetAuthors(authorNames);
 
@@ -172,21 +220,12 @@ namespace BookReviews.Impl.Logic
                 int authorId = await _authorRepository.InsertAuthor(authorRecord);
 
                 if (authorId == 0)
-                    throw new Exception("Failed to insert author");
+                    throw new Exception($"Failed to insert author {author.Name}");
                 else
                     authorIds.Add(authorId);
             }
 
             return authorIds;
-        }
-
-        private bool ValidateBook(Models.Book book)
-        {
-            if (book.Id != default && !String.IsNullOrWhiteSpace(book.Title) && book.Pages != default
-                && book.DatePublished <= DateTime.Today && book.Authors.Count > 0 && !String.IsNullOrWhiteSpace(book.Description))
-                return true;
-            else
-                return false;
         }
     }
 }
